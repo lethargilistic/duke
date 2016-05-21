@@ -33,6 +33,12 @@ class Game():
         self.board[footman2.get_y()][footman2.get_x()] = id(footman2)
         self.players[player_number] = {id(duke):duke, id(footman1):footman1, id(footman2):footman2}
 
+    def place_piece(piece, x, y):
+        pass
+
+    def remove_piece(x, y):
+        pass
+
     def display_board(self):
         #TODO: Couple this loosely
         for piece in self.players[1]:
