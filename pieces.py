@@ -118,10 +118,11 @@ class Duchess(Piece):
         Piece.__init__(self, "U", x, y, player)
 
     def move1(self):
-        raise NotImplementedError()
+        return (Move(1,0), Move(-1,0), Move(0,-2),
+                Move(-2,0,MoveRule.COMMAND), Move(2,0,MoveRule.COMMAND))
 
     def move2(self):
-        raise NotImplementedError()
+        return move1()
 
 class Footman(Piece):
     def __init__(self, x, y, player):
@@ -235,11 +236,14 @@ class Wizard(Piece):
         Piece.__init__(self, "W", x, y, player)
 
     def move1(self):
-        raise NotImplementedError()
+        return (Move(1,0), Move(1,-1), Move(0,-1),
+                Move(-1,-1), Move(-1,0), Move(-1,1), 
+                Move(0,1), Move(1,1))
 
     def move2(self):
-        raise NotImplementedError()
-
+        return (Move(2,0,MoveRule.JUMP), Move(2,-2,MoveRule.JUMP), Move(0,-2,MoveRule.JUMP),
+                Move(-2,-2,MoveRule.JUMP), Move(-2,0,MoveRule.JUMP), Move(-2,2,MoveRule.JUMP),
+                Move(0,-2,MoveRule.JUMP), Move(2,2,MoveRule.JUMP))
 '''
 class Champion(Piece):
     def __init__(self, x, y, player):
