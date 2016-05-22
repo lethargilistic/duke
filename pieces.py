@@ -142,10 +142,14 @@ class General(Piece):
         Piece.__init__(self, "G", x, y, player)
 
     def move1(self):
-        raise NotImplementedError()
+        return (Move(0,1), Move(2,0), Move(0,-1), Move(-2,0),
+                Move(-1,2,MoveRule.JUMP), Move(1,2,MoveRule.JUMP))
 
     def move2(self):
-        raise NotImplementedError()
+        return (Move(0,1), Move(1,0), Move(2,0), Move(-1,0), Move(-2,0),
+                Move(-1,2,MoveRule.JUMP), Move(1,2,MoveRule.JUMP),
+                Move(1,-1,MoveRule.COMMAND), Move(0,-1,MoveRule.COMMAND),
+                Move(-1,-1,MoveRule.COMMAND))
 
 class Knight(Piece):
     def __init__(self, x, y, player):
@@ -159,7 +163,7 @@ class Knight(Piece):
 
 class Longbowman(Piece):
     def __init__(self, x, y, player):
-        Piece.__init__(self, "K", x, y, player)
+        Piece.__init__(self, "L", x, y, player)
 
     def move1(self):
         raise NotImplementedError()
@@ -172,17 +176,21 @@ class Marshall(Piece):
         Piece.__init__(self, "M", x, y, player)
 
     def move1(self):
-        raise NotImplementedError()
+        return (Move(1,0,MoveRule.SLIDE), Move(-1,0,MoveRule.SLIDE),
+                Move(2,2,MoveRule.JUMP), Move(-2,2,MoveRule.JUMP),
+                Move(0,-2,MoveRule.JUMP),
 
     def move2(self):
-        raise NotImplementedError()
+        return (Move(1,0), Move(1,-1), Move(-1,-1), 
+                Move(-1,0), Move(-1,1), Move(0,1),
+                Move(1,1), Move(2,0), Move(-2,0))
 
 class Oracle(Piece):
     def __init__(self, x, y, player):
         Piece.__init__(self, "O", x, y, player)
 
     def move1(self):
-        raise NotImplementedError()
+        return (Move(1,1), Move(1,-1), Move(-1,-1), Move(-1,1))
 
     def move2(self):
         raise NotImplementedError()
@@ -192,10 +200,11 @@ class Pikeman(Piece):
         Piece.__init__(self, "P", x, y, player)
 
     def move1(self):
-        raise NotImplementedError()
+        return (Move(1,1), Move(2,2), Move(-1,1), Move(-2,2))
 
     def move2(self):
-        raise NotImplementedError()
+        return (Move(0,1), Move(0,-1), Move(0,-2),
+                Move(1,2,MoveRule.STRIKE), Move(-1,2,MoveRule.STRIKE))
 
 class Priest(Piece):
     def __init__(self, x, y, player):
