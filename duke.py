@@ -1,4 +1,4 @@
-from pieces import Duke, Footman
+from pieces import *
 
 class Game():
     def __init__(self):
@@ -7,11 +7,13 @@ class Game():
         self.active_player = 1
         
         self.players = [None, None, None] #No Player 0
+        self.players_bags = [None, None, None]
         self.create_player(1)
         self.create_player(2)
 
     def create_player(self, player_number):
         right_or_left_for_duke = input("Place Duke on 1)Right or 2)Left?")
+        # Place the duke
         if right_or_left_for_duke == "1":
             x = 2
         elif right_or_left_for_duke == "2":
@@ -25,13 +27,19 @@ class Game():
         else:
             raise IndexError("Player should be 1 or 2")
 
+        #TODO: Custom place the Footmen around the Duke
+
         duke = Duke(x,y,player_number)
         footman1 = Footman(x+1,y,player_number)
         footman2 = Footman(x-1,y,player_number)
         self.board[duke.get_y()][duke.get_x()] = id(duke)
         self.board[footman1.get_y()][footman1.get_x()] = id(footman1)
         self.board[footman2.get_y()][footman2.get_x()] = id(footman2)
-        self.players[player_number] = {id(duke):duke, id(footman1):footman1, id(footman2):footman2}
+        self.players[player_number] = {id(duke):duke,
+                                       id(footman1):footman1, 
+                                       id(footman2):footman2}
+        #TODO
+        #self.players_bags[player_number] = [
 
     def place_piece(piece, x, y):
         pass
@@ -41,14 +49,11 @@ class Game():
 
     def display_board(self):
         #TODO: Couple this loosely
-        for piece in self.players[1]:
-            x = self.players[1][piece].get_x()
-            y = self.players[1][piece].get_y()
-            self.board[y][x] = str(self.players[1][piece])
-        for piece in self.players[2]:
-            x = self.players[2][piece].get_x()
-            y = self.players[2][piece].get_y()
-            self.board[y][x] = str(self.players[2][piece])
+        for each in players:
+            for piece in self.players[each]:
+                x = self.players[each][piece].get_x()
+                y = self.players[each][piece].get_y()
+                self.board[y][x] = str(self.players[each][piece])
         count = 0
         for row in self.board:
             print(str(count), end="")
