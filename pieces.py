@@ -1,11 +1,9 @@
 import movement
 
 class Piece():
-    def __init__(self, name, x, y, player):
+    def __init__(self, name, player):
         self.name = name
         self.side = 1
-        self.x = x
-        self.y = y
         self.player = player
 
     def move1(self):
@@ -15,18 +13,6 @@ class Piece():
     def move2(self):
         '''Return a list of Moves'''
         raise NotImplementedError("Move 2 is not written")
-
-    def move_piece(rel_x, rel_y):
-        '''Perform movement, adding a positive or negative integer to piece's
-        x and/or y'''
-        self.x += rel_x
-        self.y += rel_y
-
-    def get_x(self):
-        return self.x
-
-    def get_y(self):
-        return self.y
 
     def toggle_side(self):
         self.side = self.side % 2 + 1
@@ -40,12 +26,15 @@ class Piece():
     def get_id(self) -> int:
         return self.get_id
 
+    def whoami(self):
+        return type(self).__name__
+
     def __str__(self):
         return self.get_name()+str(self.get_player())
 
 class Assassin(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "A", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "A", player)
 
     def move1(self):
         return (Move(0,2,MoveRule.JUMPSLIDE),
@@ -58,8 +47,8 @@ class Assassin(Piece):
                 Move(-2,2,MoveRule.JUMPSLIDE)) 
 
 class Bowman(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "S", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "S", player)
 
     def move1(self):
         return (Move(0,1), Move(1,0), Move(-1,0),
@@ -73,8 +62,8 @@ class Bowman(Piece):
 
 
 class Champion(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "C", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "C", player)
 
     def move1(self):
         return (Move(2,0,MoveRule.JUMP), Move(1,0,MoveRule.NORMAL),
@@ -89,8 +78,8 @@ class Champion(Piece):
                 Move(0,-2,MoveRule.JUMP), Move(0,-1,MoveRule.STRIKE))
 
 class Dragoon(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "Ḑ", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "Ḑ", player)
 
     def move1(self):
         return (Move(1,0), Move(-1,0),
@@ -104,8 +93,8 @@ class Dragoon(Piece):
 
 
 class Duke(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "D", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "D", player)
 
     def move1(self):
         return (Move(1,0,MoveRule.SLIDE), Move(-1,0,MoveRule.SLIDE))
@@ -114,8 +103,8 @@ class Duke(Piece):
         return (Move(0,1,MoveRule.SLIDE), Move(0,-1,MoveRule.SLIDE))
 
 class Duchess(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "U", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "U", player)
 
     def move1(self):
         return (Move(1,0), Move(-1,0), Move(0,-2),
@@ -125,8 +114,8 @@ class Duchess(Piece):
         return move1()
 
 class Footman(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "F", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "F", player)
 
     def move1(self):
         return (Move(0,1), Move(0,-1), 
@@ -138,8 +127,8 @@ class Footman(Piece):
                 Move(0,2))
 
 class General(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "G", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "G", player)
 
     def move1(self):
         return (Move(0,1), Move(2,0), Move(0,-1), Move(-2,0),
@@ -152,8 +141,8 @@ class General(Piece):
                 Move(-1,-1,MoveRule.COMMAND))
 
 class Knight(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "K", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "K", player)
 
     def move1(self):
         raise NotImplementedError()
@@ -162,8 +151,8 @@ class Knight(Piece):
         raise NotImplementedError()
 
 class Longbowman(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "L", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "L", player)
 
     def move1(self):
         raise NotImplementedError()
@@ -172,13 +161,13 @@ class Longbowman(Piece):
         raise NotImplementedError()
 
 class Marshall(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "M", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "M", player)
 
     def move1(self):
         return (Move(1,0,MoveRule.SLIDE), Move(-1,0,MoveRule.SLIDE),
                 Move(2,2,MoveRule.JUMP), Move(-2,2,MoveRule.JUMP),
-                Move(0,-2,MoveRule.JUMP),
+                Move(0,-2,MoveRule.JUMP))
 
     def move2(self):
         return (Move(1,0), Move(1,-1), Move(-1,-1), 
@@ -186,8 +175,8 @@ class Marshall(Piece):
                 Move(1,1), Move(2,0), Move(-2,0))
 
 class Oracle(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "O", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "O", player)
 
     def move1(self):
         return (Move(1,1), Move(1,-1), Move(-1,-1), Move(-1,1))
@@ -196,8 +185,8 @@ class Oracle(Piece):
         raise NotImplementedError()
 
 class Pikeman(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "P", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "P", player)
 
     def move1(self):
         return (Move(1,1), Move(2,2), Move(-1,1), Move(-2,2))
@@ -207,8 +196,8 @@ class Pikeman(Piece):
                 Move(1,2,MoveRule.STRIKE), Move(-1,2,MoveRule.STRIKE))
 
 class Priest(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "T", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "T", player)
 
     def move1(self):
         raise NotImplementedError()
@@ -217,8 +206,8 @@ class Priest(Piece):
         raise NotImplementedError()
 
 class Ranger(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "R", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "R", player)
 
     def move1(self):
         raise NotImplementedError()
@@ -227,8 +216,8 @@ class Ranger(Piece):
         raise NotImplementedError()
 
 class Seer(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "S", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "S", player)
 
     def move1(self):
         return (Move(1,1), Move(1,-1), Move(-1,-1), Move(-1,1),
@@ -241,8 +230,8 @@ class Seer(Piece):
                 Move(-2,-2,MoveRule.JUMP), Move(-2,2,MoveRule.JUMP))
 
 class Wizard(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "W", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "W", player)
 
     def move1(self):
         return (Move(1,0), Move(1,-1), Move(0,-1),
@@ -255,8 +244,8 @@ class Wizard(Piece):
                 Move(0,-2,MoveRule.JUMP), Move(2,2,MoveRule.JUMP))
 '''
 class Champion(Piece):
-    def __init__(self, x, y, player):
-        Piece.__init__(self, "C", x, y, player)
+    def __init__(self, player):
+        Piece.__init__(self, "C", player)
 
     def move1(self):
         raise NotImplementedError()

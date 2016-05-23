@@ -4,7 +4,7 @@ class Game():
     def __init__(self):
         self.board_size = 6
         self.board = [["  " for x in range(self.board_size)] for y in range(self.board_size)]
-        self.active_player = 1
+        self.current_player = 1
         
         self.players = [None, None, None] #No Player 0
         self.players_bags = [None, None, None]
@@ -12,7 +12,7 @@ class Game():
         self.create_player(2)
 
     def create_player(self, player_number):
-        right_or_left_for_duke = input("Place Duke on 1)Right or 2)Left?")
+        right_or_left_for_duke = input("Place Duke on 1) Right or 2) Left?")
         # Place the duke
         if right_or_left_for_duke == "1":
             x = 2
@@ -29,58 +29,49 @@ class Game():
 
         #TODO: Custom place the Footmen around the Duke
 
-        duke = Duke(x,y,player_number)
-        footman1 = Footman(x+1,y,player_number)
-        footman2 = Footman(x-1,y,player_number)
-        self.board[duke.get_y()][duke.get_x()] = id(duke)
-        self.board[footman1.get_y()][footman1.get_x()] = id(footman1)
-        self.board[footman2.get_y()][footman2.get_x()] = id(footman2)
+        duke = Duke(player_number)
+        footman1 = Footman(player_number)
+        footman2 = Footman(player_number)
+        self.board[y][x] = id(duke)
+        self.board[y][x+1] = id(footman1)
+        self.board[y][x-1] = id(footman2)
         self.players[player_number] = {id(duke):duke,
                                        id(footman1):footman1, 
                                        id(footman2):footman2}
         #TODO
         #self.players_bags[player_number] = [
 
-    def place_piece(piece, x, y):
-        pass
+    def make_move(self) -> bool:
+        #Choose piece to move OR place a new piece
+        #Highlight possible moves
+        #Choose move
+        print("CHOOSE MOVE")
+        #Execute move
+        #Is game over?
+        #End of turn housekeeping
+        #moved_piece.change_side()
+        #self.active_player = self.active_player % 2 + 1
+        self.current_player %= 2
+        self.current_player += 1
+        return True
 
-    def remove_piece(x, y):
-        pass
+    def place_piece(self, piece, x, y):
+        raise NotImplementedError()
 
-    def display_board(self):
-        #TODO: Couple this loosely
-        for each in players:
-            for piece in self.players[each]:
-                x = self.players[each][piece].get_x()
-                y = self.players[each][piece].get_y()
-                self.board[y][x] = str(self.players[each][piece])
-        count = 0
-        for row in self.board:
-            print(str(count), end="")
-            count+=1
-            for slot in row:
-                print(slot + "|", end="")
-            print()
+    def remove_piece(self, x, y):
+        raise NotImplementedError()
 
-    def game_loop(self):
-        #Each player has a list of pieces. If no Duke in their pieces, they lose
-        still_playing = True
-        #TODO: remove temporary import below
-        import time
-        while(still_playing):
-            #Display Board
-            self.display_board()
-            #Choose piece to move
-            #Highlight possible moves
-            #Choose move
-            print("CHOOSE MOVE")
-            time.sleep(2)
-            #Execute move
-            #Is game over?
-            #End of turn housekeeping
-            #moved_piece.change_side()
-            #self.active_player = self.active_player % 2 + 1
-        #Game is over. Show results
+    def get_current_player(self):
+        return self.current_player
 
-g = Game()
-g.game_loop()
+    def get_board_size(self):
+        return self.board_size
+
+    def get_player1_pieces(self):
+        return self.players[1]
+
+    def get_player2_pieces(self):
+        return self.players[2]
+
+    def get_board(self):
+        return self.board
