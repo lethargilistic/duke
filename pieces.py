@@ -1,6 +1,7 @@
+from abc import ABCMeta, abstractmethod
 from movement import *
 
-class Piece():
+class Piece(metaclass=ABCMeta):
     def __init__(self, name, player):
         self.name = name
         self.side = 1
@@ -20,10 +21,12 @@ class Piece():
 
         return moveset
 
+    @abstractmethod
     def move1(self):
         '''Return a list of Moves'''
         raise NotImplementedError("Move 1 is not written")
 
+    @abstractmethod
     def move2(self):
         '''Return a list of Moves'''
         raise NotImplementedError("Move 2 is not written")
