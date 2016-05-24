@@ -1,10 +1,24 @@
-import movement
+from movement import *
 
 class Piece():
     def __init__(self, name, player):
         self.name = name
         self.side = 1
         self.player = player
+
+    def move(self):
+        if self.side == 1:
+            return self.move1()
+        elif self.side == 2:
+            return self.move2()
+        else:
+            raise IndexError("Pieces have 2 sides")
+
+        if self.player == 2:
+            for move in moveset:
+                move.for_player2()
+
+        return moveset
 
     def move1(self):
         '''Return a list of Moves'''
