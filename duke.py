@@ -41,6 +41,21 @@ class Game():
         #TODO
         #self.players_bags[player_number] = [
 
+    def filter_moves(self, piece_id, all_moves):
+        #TODO: filters only for normal movement now, and does not tell if other
+        #pieces are in the way.
+        valid_moveset = []
+        for y, row in enumerate(self.board):
+            if piece_id in row:
+                x = row.index(piece_id)
+                for move in all_moves:
+                    if 0 <= move.get_x() + x < self.board_size \
+                        and 0 <= move.get_y() + y < self.board_size:
+                            valid_moveset.append(move)
+
+        return valid_moveset
+               #TODO: Return all valid, possible moves by this piece
+
     def make_move(self) -> bool:
         #Choose piece to move OR place a new piece
         #Highlight possible moves

@@ -16,10 +16,15 @@ class Controller():
                     print(str(num) + ":", pieces[piece].whoami())
                     piece_list.append(piece)
                 piece_choice = int(input("Which piece?"))
-                piece = pieces[piece_list[piece_choice]]
-                print(", ".join(map(str,piece.move())))
-                piece.toggle_side()
-                print(", ".join(map(str,piece.move())))
+                piece_id = piece_list[piece_choice]
+                piece_obj = pieces[piece_id]
+                print(", ".join(map(str,piece_obj.move())))
+                self.game.filter_moves(piece_id, piece_obj.move())
+                piece_obj.toggle_side()
+                print(", ".join(map(str,piece_obj.move())))
+                print(", ".join(map(str,self.game.filter_moves(piece_id,
+                    piece_obj.move()))))
+                
 
             elif player == 2:
                 pieces = self.game.get_player2_pieces()

@@ -19,17 +19,17 @@ class Move():
         self.y = y
         self.rule = rule 
     
-    def for_player2():
+    def for_player2(self):
         self.x *= -1
         self.y *= -1
 
-    def get_x() -> int:
+    def get_x(self) -> int:
         return self.x
 
-    def get_y():
+    def get_y(self):
         return self.y
 
-    def get_rule():
+    def get_rule(self):
         return self.rule
 
     def __str__(self):
