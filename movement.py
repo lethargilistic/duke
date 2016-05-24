@@ -18,6 +18,10 @@ class Move():
         self.x = x
         self.y = y
         self.rule = rule 
+    
+    def for_player2():
+        self.x *= -1
+        self.y *= -1
 
     def get_x() -> int:
         return self.x
