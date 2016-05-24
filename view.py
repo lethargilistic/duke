@@ -23,9 +23,10 @@ class View():
                         raise TypeError("An id was on the board but not belonging to a player")
 
     def show_board(self):
-        for count, row in enumerate(self.displayboard):
+        count = self.game.get_board_size() - 1
+        for row in self.displayboard[::-1]:
             print(str(count), end="")
-            count+=1
+            count-=1
             for slot in row:
                 print(slot + "|", end="")
             print()
