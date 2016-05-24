@@ -41,20 +41,54 @@ class Game():
         #TODO
         #self.players_bags[player_number] = [
 
+    def in_board_bounds(self, x, y):
+        return 0 <= x < self.board_size and 0 <= y < self.board_size
+
+    def normal_filter(self, move, new_x, new_y):
+        '''Returns a list of Move if the Move is valid, or an empty list'''
+        #Eliminate based on going off the board
+        if not self.in_board_bounds(new_x, new_y):
+            return []
+
+        #Eliminate based on landing on friendly unit
+        if self.board[new_y][new_x] in self.players[self.current_player]:
+            return []
+    
+        return (move)
+
+    def slide_filter(self, move, new_x, new_y):
+        '''Converts a Move with MoveRule.SLIDE to the equivalent valid list of Move with
+        MoveRule.NORMAL'''
+        slide_moves = []
+        while self.in_board_bounds(new_x, new_y):
+            if isinstance(self.board[new_y][new_x], int):
+                if not self.board[new_y][new_x] in self.players[self.current_player]:
+                    slide_moves.append(Move(new_x, new_y))
+                break
+            else:
+                slide_moves.append(Move(new_x, new_y))
+            new_x += move.get_x()
+            new_y += move.get_y()
+        return slide_moves
+
+
     def filter_moves(self, piece_id, all_moves):
-        #TODO: filters only for normal movement now, and does not tell if other
-        #pieces are in the way.
+        #TODO: Return all valid, possible moves by this piece
         valid_moveset = []
         for y, row in enumerate(self.board):
             if piece_id in row:
                 x = row.index(piece_id)
                 for move in all_moves:
-                    if 0 <= move.get_x() + x < self.board_size \
-                        and 0 <= move.get_y() + y < self.board_size:
-                            valid_moveset.append(move)
+                    new_x = x + move.get_x()
+                    new_y = y + move.get_y()
+                    if move.get_rule() == MoveRule.NORMAL:
+                        valid_moveset += self.normal_filter(move, new_x, new_y)
+                    elif move.get_rule() == MoveRule.SLIDE:
+                        valid_moveset += self.slide_filter(move, new_x, new_y)
+                    else:
+                        raise NotImplementedError("Only Normal and slide implemented")
 
         return valid_moveset
-               #TODO: Return all valid, possible moves by this piece
 
     def make_move(self) -> bool:
         #Choose piece to move OR place a new piece

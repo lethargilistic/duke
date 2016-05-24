@@ -19,12 +19,12 @@ class Controller():
                 piece_id = piece_list[piece_choice]
                 piece_obj = pieces[piece_id]
                 print(", ".join(map(str,piece_obj.move())))
-                self.game.filter_moves(piece_id, piece_obj.move())
+                valid_moves = self.game.filter_moves(piece_id, piece_obj.move())
+                if valid_moves:
+                    print(", ".join(map(str,valid_moves)))
+                else:
+                    print([])
                 piece_obj.toggle_side()
-                print(", ".join(map(str,piece_obj.move())))
-                print(", ".join(map(str,self.game.filter_moves(piece_id,
-                    piece_obj.move()))))
-                
 
             elif player == 2:
                 pieces = self.game.get_player2_pieces()
