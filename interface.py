@@ -1,4 +1,5 @@
 from duke import Game
+from movement import *
 
 class Controller():
     def __init__(self, game):
@@ -10,8 +11,16 @@ class Controller():
         if move_choice == "1":
             if player == 1:
                 pieces = self.game.get_player1_pieces()
+                piece_list = []
                 for num, piece in enumerate(pieces):
                     print(str(num) + ":", pieces[piece].whoami())
+                    piece_list.append(piece)
+                piece_choice = int(input("Which piece?"))
+                piece = pieces[piece_list[piece_choice]]
+                print(", ".join(map(str,piece.move())))
+                piece.toggle_side()
+                print(", ".join(map(str,piece.move())))
+
             elif player == 2:
                 pieces = self.game.get_player2_pieces()
                 for num, piece in enumerate(pieces):
