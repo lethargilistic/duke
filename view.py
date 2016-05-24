@@ -25,7 +25,7 @@ class View():
     def show_board(self):
         count = self.game.get_board_size() - 1
         for row in self.displayboard[::-1]:
-            print(str(count), end="")
+            print(str(count)+"|", end="")
             count-=1
             for slot in row:
                 print(slot + "|", end="")
