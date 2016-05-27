@@ -65,7 +65,7 @@ class Game():
         if self.board[new_y][new_x] in self.players[self.current_player]:
             return []
     
-        return (move)
+        return [move]
 
     def slide_filter(self, move, new_x, new_y):
         '''Converts a Move with MoveRule.SLIDE to the equivalent valid list of Move with
