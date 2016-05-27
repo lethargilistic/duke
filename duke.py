@@ -8,37 +8,47 @@ class Game():
         
         self.players = [None, None, None] #No Player 0
         self.players_bags = [None, None, None]
-        self.create_player(1)
-        self.create_player(2)
 
-    def create_player(self, player_number):
-        right_or_left_for_duke = input("Place Duke on 1) Right or 2) Left?")
+    def create_player(self, player_number, duke_on_right: bool,
+                      footman_positions: "set of int"):
         # Place the duke
-        if right_or_left_for_duke == "1":
+        if duke_on_right:
             x = 2
-        elif right_or_left_for_duke == "2":
-            x = 3
         else:
-            raise IndexError("Choose Right or left")
+            x = 3
         if player_number == 1:
             y = 0
         elif player_number == 2:
             y = 5
         else:
-            raise IndexError("Player should be 1 or 2")
+            raise ValueError("Player should be 1 or 2")
 
         #TODO: Custom place the Footmen around the Duke
-
         duke = Duke(player_number)
-        footman1 = Footman(player_number)
-        footman2 = Footman(player_number)
         self.board[y][x] = id(duke)
-        self.board[y][x+1] = id(footman1)
-        self.board[y][x-1] = id(footman2)
-        self.players[player_number] = {id(duke):duke,
-                                       id(footman1):footman1, 
-                                       id(footman2):footman2}
-        #TODO
+        #TODO: Footman_positions ex (1,2); make sure they're different, ints 1 2 or 3
+        
+        if len(footman_positions) != 2:
+            raise ValueError("There must be 2 positions for starting footman positions")
+        self.players[player_number] = {id(duke):duke}
+        
+        for position in footman_positions:
+            footman = Footman(player_number)
+            footman_x = x
+            footman_y = y
+            if position == 1:
+                footman_x = x - 1
+            elif position == 2:
+                if player_number == 1:
+                    footman_y = y + 1
+                else:
+                    footman_y = y - 1
+            elif position == 3:
+                footman_x = x + 1
+            self.board[footman_y][footman_x] = id(footman)
+            self.players[player_number][id(footman)] = footman
+
+        #TODO: Fill player's bag with the other pieces
         #self.players_bags[player_number] = [
 
     def in_board_bounds(self, x, y):

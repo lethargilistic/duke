@@ -4,6 +4,23 @@ from movement import *
 class Controller():
     def __init__(self, game):
         self.game = game
+        self.set_up_player(1)
+        self.set_up_player(2)
+
+    def set_up_player(self, player_number):
+        right_or_left_for_duke = input("Place Duke on 1) Right or 2) Left?")
+        duke_on_right = None
+        if right_or_left_for_duke == "1":
+            duke_on_right = True
+        elif right_or_left_for_duke == "2":
+            duke_on_right = False
+        else:
+            raise IndexError("Choose right or left")
+        #TODO
+        footman1_position = int(input("Right to left (1, 2, or 3) where do you want Footman 1? "))
+        footman2_position = int(input("Right to left (1, 2, or 3) where do you want Footman 2? "))
+        footman_positions = {footman1_position, footman2_position}
+        self.game.create_player(player_number, duke_on_right, footman_positions)
 
     def make_move(self) -> bool:
         player = self.game.get_current_player()
