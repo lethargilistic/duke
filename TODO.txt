@@ -1,0 +1,7 @@
+* Player can choose to place a token from their bag instead of moving
+* [CHECK] Player can place the starting footman in custom way
+* Implement Strike movement
+* Implement JumpSlide movement
+* Implement Defense movement
+* Implement Dread movement
+* Implement Command movement
