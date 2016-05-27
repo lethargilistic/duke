@@ -55,7 +55,8 @@ class Game():
         return 0 <= x < self.board_size and 0 <= y < self.board_size
 
     def normal_filter(self, move, new_x, new_y):
-        '''Returns a list of Move if the Move is valid, or an empty list'''
+        '''Returns a list of Move if the Move is valid (does not go off board,
+        does not capture friendly Piece), or an empty list'''
         #Eliminate based on going off the board
         if not self.in_board_bounds(new_x, new_y):
             return []
@@ -81,7 +82,6 @@ class Game():
             new_y += move.get_y()
         return slide_moves
 
-
     def filter_moves(self, piece_id, all_moves):
         #TODO: Return all valid, possible moves by this piece
         valid_moveset = []
@@ -92,6 +92,8 @@ class Game():
                     new_x = x + move.get_x()
                     new_y = y + move.get_y()
                     if move.get_rule() == MoveRule.NORMAL:
+                        valid_moveset += self.normal_filter(move, new_x, new_y)
+                    elif move.get_rule() == MoveRule.STRIKE:
                         valid_moveset += self.normal_filter(move, new_x, new_y)
                     elif move.get_rule() == MoveRule.SLIDE:
                         valid_moveset += self.slide_filter(move, new_x, new_y)
