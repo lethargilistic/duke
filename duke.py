@@ -117,10 +117,12 @@ class Game():
         return True
 
     def place_piece(self, piece, x, y):
-        raise NotImplementedError()
+        '''Put a piece on the board at position (x,y). Will clobber pieces.'''
+        self.board[y][x] = piece
 
     def remove_piece(self, x, y):
-        raise NotImplementedError()
+        '''Remove a piece on the board at position (x,y).'''
+        self.board[y][x] = "  "
 
     def get_current_player(self):
         return self.current_player
