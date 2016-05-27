@@ -54,9 +54,10 @@ class Game():
     def in_board_bounds(self, x, y):
         return 0 <= x < self.board_size and 0 <= y < self.board_size
 
-    def normal_filter(self, move, new_x, new_y):
+    def standard_filter(self, move, new_x, new_y) -> "list of Move":
         '''Returns a list of Move if the Move is valid (does not go off board,
-        does not capture friendly Piece), or an empty list'''
+        does not capture friendly Piece), or an empty list. Move retains its
+        MoveRule.'''
         #Eliminate based on going off the board
         if not self.in_board_bounds(new_x, new_y):
             return []
@@ -67,9 +68,9 @@ class Game():
     
         return [move]
 
-    def slide_filter(self, move, new_x, new_y):
-        '''Converts a Move with MoveRule.SLIDE to the equivalent valid list of Move with
-        MoveRule.NORMAL'''
+    def slide_filter(self, move, new_x, new_y) -> "list of Move":
+        '''Converts a Move with MoveRule.SLIDE to the equivalent valid list of
+        Move with MoveRule.NORMAL'''
         slide_moves = []
         while self.in_board_bounds(new_x, new_y):
             if isinstance(self.board[new_y][new_x], int):
@@ -82,7 +83,7 @@ class Game():
             new_y += move.get_y()
         return slide_moves
 
-    def filter_moves(self, piece_id, all_moves):
+    def filter_moves(self, piece_id, all_moves) -> "list of Move":
         #TODO: Return all valid, possible moves by this piece
         valid_moveset = []
         for y, row in enumerate(self.board):
@@ -92,13 +93,23 @@ class Game():
                     new_x = x + move.get_x()
                     new_y = y + move.get_y()
                     if move.get_rule() == MoveRule.NORMAL:
-                        valid_moveset += self.normal_filter(move, new_x, new_y)
+                        valid_moveset += self.standard_filter(move, new_x, new_y)
                     elif move.get_rule() == MoveRule.STRIKE:
-                        valid_moveset += self.normal_filter(move, new_x, new_y)
+                        valid_moveset += self.standard_filter(move, new_x, new_y)
+                    elif move.get_rule() == MoveRule.JUMP:
+                        raise NotImplementedError("Not all move filtering is implemented")
                     elif move.get_rule() == MoveRule.SLIDE:
                         valid_moveset += self.slide_filter(move, new_x, new_y)
+                    elif move.get_rule() == MoveRule.JUMPSLIDE:
+                        raise NotImplementedError("Not all move filtering is implemented")
+                    elif move.get_rule() == MoveRule.COMMAND:
+                        raise NotImplementedError("Not all move filtering is implemented")
+                    elif move.get_rule() == MoveRule.DREAD:
+                        raise NotImplementedError("Not all move filtering is implemented")
+                    elif move.get_rule() == MoveRule.DEFENSE:
+                        raise NotImplementedError("Not all move filtering is implemented")
                     else:
-                        raise NotImplementedError("Only Normal and slide implemented")
+                        raise NotImplementedError("Not all move filtering is implemented")
 
         return valid_moveset
 
