@@ -6,11 +6,10 @@ class Game():
         self.board = [["  " for x in range(self.board_size)] for y in range(self.board_size)]
         self.current_player = 1
         
-        self.players = [None, None, None] #No Player 0
-        self.players_bags = [None, None, None]
+        self.players = [None, {}, {}] #No Player 0
+        self.players_bags = [None, [], []]
 
-    def create_player(self, player_number, duke_on_right: bool,
-                      footman_positions: "set of int"):
+    def create_player(self, player_number, duke_on_right: int, footman_positions: "set of int"):
         # Place the duke
         if duke_on_right:
             x = 2
@@ -23,13 +22,12 @@ class Game():
         else:
             raise ValueError("Player should be 1 or 2")
 
-        #TODO: Custom place the Footmen around the Duke
         duke = Duke(player_number)
         self.board[y][x] = id(duke)
-        #TODO: Footman_positions ex (1,2); make sure they're different, ints 1 2 or 3
         
-        if len(footman_positions) != 2:
+        if len(footman_positions) != 2 or not footman_positions.issubset({1,2,3}):
             raise ValueError("There must be 2 positions for starting footman positions")
+
         self.players[player_number] = {id(duke):duke}
         
         for position in footman_positions:
@@ -51,10 +49,10 @@ class Game():
         #TODO: Fill player's bag with the other pieces
         #self.players_bags[player_number] = [
 
-    def in_board_bounds(self, x, y):
+    def __in_board_bounds(self, x, y):
         return 0 <= x < self.board_size and 0 <= y < self.board_size
 
-    def standard_filter(self, move, new_x, new_y) -> "list of Move":
+    def __standard_filter(self, move, new_x, new_y) -> "list of Move":
         '''Returns a list of Move if the Move is valid (does not go off board,
         does not capture friendly Piece), or an empty list. Move retains its
         MoveRule.'''
@@ -68,7 +66,7 @@ class Game():
     
         return [move]
 
-    def slide_filter(self, move, new_x, new_y) -> "list of Move":
+    def __slide_filter(self, move, new_x, new_y) -> "list of Move":
         '''Converts a Move with MoveRule.SLIDE to the equivalent valid list of
         Move with MoveRule.NORMAL'''
         slide_moves = []
