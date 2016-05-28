@@ -7,7 +7,7 @@ class ModelTest(unittest.TestCase):
         self.game = Game()
 
     def is_board_valid(self):
-        either_player = dict(list(self.game.players[1].items()) + list(self.game.players[2].items()))
+        either_player = dict(list(self.game.player_pieces[1].items()) + list(self.game.player_pieces[2].items()))
         for y, row in enumerate(self.game.board):
             for x, col in enumerate(row):
                 space = self.game.board[y][x]
@@ -20,30 +20,30 @@ class ModelTest(unittest.TestCase):
 
     def test_valid_create_player_1__rightDuke12(self):
         self.game.create_player(1, True, {1,2})
-        self.assertTrue(isinstance(self.game.players[1][self.game.board[0][2]], Duke))
-        self.assertTrue(isinstance(self.game.players[1][self.game.board[0][1]], Footman))
-        self.assertTrue(isinstance(self.game.players[1][self.game.board[1][2]], Footman))
+        self.assertTrue(isinstance(self.game.player_pieces[1][self.game.board[0][2]], Duke))
+        self.assertTrue(isinstance(self.game.player_pieces[1][self.game.board[0][1]], Footman))
+        self.assertTrue(isinstance(self.game.player_pieces[1][self.game.board[1][2]], Footman))
         self.assertTrue(self.is_board_valid())
 
     def test_valid_create_player_1__leftDuke12(self):
         self.game.create_player(1, False, {1,2})
-        self.assertTrue(isinstance(self.game.players[1][self.game.board[0][3]], Duke))
-        self.assertTrue(isinstance(self.game.players[1][self.game.board[0][2]], Footman))
-        self.assertTrue(isinstance(self.game.players[1][self.game.board[1][3]], Footman))
+        self.assertTrue(isinstance(self.game.player_pieces[1][self.game.board[0][3]], Duke))
+        self.assertTrue(isinstance(self.game.player_pieces[1][self.game.board[0][2]], Footman))
+        self.assertTrue(isinstance(self.game.player_pieces[1][self.game.board[1][3]], Footman))
         self.assertTrue(self.is_board_valid())
 
     def test_valid_create_player_2__rightDuke12(self):
         self.game.create_player(2, True, {1,2})
-        self.assertTrue(isinstance(self.game.players[2][self.game.board[5][2]], Duke))
-        self.assertTrue(isinstance(self.game.players[2][self.game.board[5][1]], Footman))
-        self.assertTrue(isinstance(self.game.players[2][self.game.board[4][2]], Footman))
+        self.assertTrue(isinstance(self.game.player_pieces[2][self.game.board[5][2]], Duke))
+        self.assertTrue(isinstance(self.game.player_pieces[2][self.game.board[5][1]], Footman))
+        self.assertTrue(isinstance(self.game.player_pieces[2][self.game.board[4][2]], Footman))
         self.assertTrue(self.is_board_valid())
 
     def test_valid_create_player_2__leftDuke12(self):
         self.game.create_player(2, False, {1,2})
-        self.assertTrue(isinstance(self.game.players[2][self.game.board[5][3]], Duke))
-        self.assertTrue(isinstance(self.game.players[2][self.game.board[5][2]], Footman))
-        self.assertTrue(isinstance(self.game.players[2][self.game.board[4][3]], Footman))
+        self.assertTrue(isinstance(self.game.player_pieces[2][self.game.board[5][3]], Duke))
+        self.assertTrue(isinstance(self.game.player_pieces[2][self.game.board[5][2]], Footman))
+        self.assertTrue(isinstance(self.game.player_pieces[2][self.game.board[4][3]], Footman))
         self.assertTrue(self.is_board_valid())
 
     def test_invalid_create_player__badPlayer(self):

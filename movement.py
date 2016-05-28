@@ -23,15 +23,6 @@ class Move():
         self.x *= -1
         self.y *= -1
 
-    def get_x(self) -> int:
-        return self.x
-
-    def get_y(self):
-        return self.y
-
-    def get_rule(self):
-        return self.rule
-
     def __str__(self):
         return "("+str(self.x)+","+str(self.y)+","+MoveRule.string(self.rule)+")"
 

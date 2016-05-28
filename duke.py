@@ -1,13 +1,13 @@
 from pieces import *
 
 class Game():
+    BOARD_SIZE = 6
     def __init__(self):
-        self.board_size = 6
-        self.board = [["  " for x in range(self.board_size)] for y in range(self.board_size)]
+        self.board = [["  " for x in range(Game.BOARD_SIZE)] for y in range(Game.BOARD_SIZE)]
         self.current_player = 1
         
-        self.players = [None, {}, {}] #No Player 0
-        self.players_bags = [None, [], []]
+        self.player_pieces = [None, {}, {}] #No Player 0
+        self.player_pieces_bags = [None, [], []]
 
     def create_player(self, player_number, duke_on_right: int, footman_positions: "set of int"):
         # Place the duke
@@ -28,7 +28,7 @@ class Game():
         if len(footman_positions) != 2 or not footman_positions.issubset({1,2,3}):
             raise ValueError("There must be 2 positions for starting footman positions")
 
-        self.players[player_number] = {id(duke):duke}
+        self.player_pieces[player_number] = {id(duke):duke}
         
         for position in footman_positions:
             footman = Footman(player_number)
@@ -44,24 +44,24 @@ class Game():
             elif position == 3:
                 footman_x = x + 1
             self.board[footman_y][footman_x] = id(footman)
-            self.players[player_number][id(footman)] = footman
+            self.player_pieces[player_number][id(footman)] = footman
 
         #TODO: Fill player's bag with the other pieces
-        #self.players_bags[player_number] = [
+        #self.player_pieces_bags[player_number] = [
 
     def __in_board_bounds(self, x, y):
-        return 0 <= x < self.board_size and 0 <= y < self.board_size
+        return 0 <= x < Game.BOARD_SIZE and 0 <= y < Game.BOARD_SIZE
 
     def __standard_filter(self, move, new_x, new_y) -> "list of Move":
         '''Returns a list of Move if the Move is valid (does not go off board,
         does not capture friendly Piece), or an empty list. Move retains its
         MoveRule.'''
         #Eliminate based on going off the board
-        if not self.in_board_bounds(new_x, new_y):
+        if not self.__in_board_bounds(new_x, new_y):
             return []
 
         #Eliminate based on landing on friendly unit
-        if self.board[new_y][new_x] in self.players[self.current_player]:
+        if self.board[new_y][new_x] in self.player_pieces[self.current_player]:
             return []
     
         return [move]
@@ -70,15 +70,15 @@ class Game():
         '''Converts a Move with MoveRule.SLIDE to the equivalent valid list of
         Move with MoveRule.NORMAL'''
         slide_moves = []
-        while self.in_board_bounds(new_x, new_y):
+        while self.__in_board_bounds(new_x, new_y):
             if isinstance(self.board[new_y][new_x], int):
-                if not self.board[new_y][new_x] in self.players[self.current_player]:
+                if not self.board[new_y][new_x] in self.player_pieces[self.current_player]:
                     slide_moves.append(Move(new_x, new_y))
                 break
             else:
                 slide_moves.append(Move(new_x, new_y))
-            new_x += move.get_x()
-            new_y += move.get_y()
+            new_x += move.x
+            new_y += move.y
         return slide_moves
 
     def filter_moves(self, piece_id, all_moves) -> "list of Move":
@@ -88,23 +88,23 @@ class Game():
             if piece_id in row:
                 x = row.index(piece_id)
                 for move in all_moves:
-                    new_x = x + move.get_x()
-                    new_y = y + move.get_y()
-                    if move.get_rule() == MoveRule.NORMAL:
-                        valid_moveset += self.standard_filter(move, new_x, new_y)
-                    elif move.get_rule() == MoveRule.STRIKE:
-                        valid_moveset += self.standard_filter(move, new_x, new_y)
-                    elif move.get_rule() == MoveRule.JUMP:
+                    new_x = x + move.x
+                    new_y = y + move.y
+                    if move.rule == MoveRule.NORMAL:
+                        valid_moveset += self.__standard_filter(move, new_x, new_y)
+                    elif move.rule == MoveRule.STRIKE:
+                        valid_moveset += self.__standard_filter(move, new_x, new_y)
+                    elif move.rule == MoveRule.JUMP:
                         raise NotImplementedError("Not all move filtering is implemented")
-                    elif move.get_rule() == MoveRule.SLIDE:
-                        valid_moveset += self.slide_filter(move, new_x, new_y)
-                    elif move.get_rule() == MoveRule.JUMPSLIDE:
+                    elif move.rule == MoveRule.SLIDE:
+                        valid_moveset += self.__slide_filter(move, new_x, new_y)
+                    elif move.rule == MoveRule.JUMPSLIDE:
                         raise NotImplementedError("Not all move filtering is implemented")
-                    elif move.get_rule() == MoveRule.COMMAND:
+                    elif move.rule == MoveRule.COMMAND:
                         raise NotImplementedError("Not all move filtering is implemented")
-                    elif move.get_rule() == MoveRule.DREAD:
+                    elif move.rule == MoveRule.DREAD:
                         raise NotImplementedError("Not all move filtering is implemented")
-                    elif move.get_rule() == MoveRule.DEFENSE:
+                    elif move.rule == MoveRule.DEFENSE:
                         raise NotImplementedError("Not all move filtering is implemented")
                     else:
                         raise NotImplementedError("Not all move filtering is implemented")
@@ -122,14 +122,3 @@ class Game():
     def toggle_player(self):
         self.current_player = self.current_player % 2 + 1
 
-    def get_current_player(self):
-        return self.current_player
-
-    def get_board_size(self):
-        return self.board_size
-
-    def get_player_pieces(self, player):
-        return self.players[player]
-
-    def get_board(self):
-        return self.board

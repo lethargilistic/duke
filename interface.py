@@ -26,7 +26,7 @@ class Controller():
     def move_piece(self, player):
         if player not in [1,2]:
             raise IndexError("Player must be 1 or 2")
-        pieces = self.game.get_player_pieces(player)
+        pieces = self.game.player_pieces[player]
         piece_list = []
         for num, piece in enumerate(pieces):
             print(str(num) + ":", pieces[piece].whoami())
@@ -44,7 +44,7 @@ class Controller():
 
     def take_turn(self) -> bool:
         print("Player", self.game.current_player)
-        player = self.game.get_current_player()
+        player = self.game.current_player
         move_choice = input("1) Move a piece or 2) place a new one")
         if move_choice == "1":
             self.move_piece(player)
