@@ -113,20 +113,6 @@ class Game():
 
         return valid_moveset
 
-    def make_move(self) -> bool:
-        #Choose piece to move OR place a new piece
-        #Highlight possible moves
-        #Choose move
-        print("CHOOSE MOVE")
-        #Execute move
-        #Is game over?
-        #End of turn housekeeping
-        #moved_piece.change_side()
-        #self.active_player = self.active_player % 2 + 1
-        self.current_player %= 2
-        self.current_player += 1
-        return True
-
     def place_piece(self, piece, x, y):
         '''Put a piece on the board at position (x,y). Will clobber pieces.'''
         self.board[y][x] = piece
