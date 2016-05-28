@@ -135,17 +135,17 @@ class Game():
         '''Remove a piece on the board at position (x,y).'''
         self.board[y][x] = "  "
 
+    def toggle_player(self):
+        self.current_player = self.current_player % 2 + 1
+
     def get_current_player(self):
         return self.current_player
 
     def get_board_size(self):
         return self.board_size
 
-    def get_player1_pieces(self):
-        return self.players[1]
-
-    def get_player2_pieces(self):
-        return self.players[2]
+    def get_player_pieces(self, player):
+        return self.players[player]
 
     def get_board(self):
         return self.board

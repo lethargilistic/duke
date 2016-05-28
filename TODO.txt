@@ -6,3 +6,4 @@
 * Implement Dread movement
 * Implement Command movement
 * TESTING
+* Getters & setters -> pythonic properties

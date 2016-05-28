@@ -11,10 +11,7 @@ def game_loop(view, controller):
     view.show_board()
     still_playing = True
     while(still_playing):
-        still_playing = controller.make_move()
-
-        #TODO: Remove temporary time advance
-        time.sleep(2)
+        still_playing = controller.take_turn()
 
         #Display Board
         view.update()

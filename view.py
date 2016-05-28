@@ -15,10 +15,10 @@ class View():
         for y, row in enumerate(self.game.get_board()):
             for x, cell in enumerate(row):
                 if isinstance(cell, int):
-                    if cell in self.game.get_player1_pieces():
-                        self.displayboard[y][x] = str(self.game.get_player1_pieces()[cell])
-                    elif cell in self.game.get_player2_pieces():
-                        self.displayboard[y][x] = str(self.game.get_player2_pieces()[cell])
+                    if cell in self.game.get_player_pieces(1):
+                        self.displayboard[y][x] = str(self.game.get_player_pieces(1)[cell])
+                    elif cell in self.game.get_player_pieces(2):
+                        self.displayboard[y][x] = str(self.game.get_player_pieces(2)[cell])
                     else:
                         raise TypeError("An id was on the board but not belonging to a player")
 

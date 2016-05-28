@@ -8,6 +8,7 @@ class Controller():
         self.set_up_player(2)
 
     def set_up_player(self, player_number):
+        print("Set Up Player", player_number)
         right_or_left_for_duke = input("Place Duke on 1) Right or 2) Left?")
         duke_on_right = None
         if right_or_left_for_duke == "1":
@@ -22,35 +23,36 @@ class Controller():
         footman_positions = {footman1_position, footman2_position}
         self.game.create_player(player_number, duke_on_right, footman_positions)
 
-    def make_move(self) -> bool:
+    def move_piece(self, player):
+        if player not in [1,2]:
+            raise IndexError("Player must be 1 or 2")
+        pieces = self.game.get_player_pieces(player)
+        piece_list = []
+        for num, piece in enumerate(pieces):
+            print(str(num) + ":", pieces[piece].whoami())
+            piece_list.append(piece)
+        piece_choice = int(input("Which piece?"))
+        piece_id = piece_list[piece_choice]
+        piece_obj = pieces[piece_id]
+        print(", ".join(map(str,piece_obj.move())))
+        valid_moves = self.game.filter_moves(piece_id, piece_obj.move())
+        if valid_moves:
+            print(", ".join(map(str,valid_moves)))
+        else:
+            print([])
+        piece_obj.toggle_side()
+
+    def take_turn(self) -> bool:
+        print("Player", self.game.current_player)
         player = self.game.get_current_player()
         move_choice = input("1) Move a piece or 2) place a new one")
         if move_choice == "1":
-            if player == 1:
-                pieces = self.game.get_player1_pieces()
-                piece_list = []
-                for num, piece in enumerate(pieces):
-                    print(str(num) + ":", pieces[piece].whoami())
-                    piece_list.append(piece)
-                piece_choice = int(input("Which piece?"))
-                piece_id = piece_list[piece_choice]
-                piece_obj = pieces[piece_id]
-                print(", ".join(map(str,piece_obj.move())))
-                valid_moves = self.game.filter_moves(piece_id, piece_obj.move())
-                if valid_moves:
-                    print(", ".join(map(str,valid_moves)))
-                else:
-                    print([])
-                piece_obj.toggle_side()
-
-            elif player == 2:
-                pieces = self.game.get_player2_pieces()
-                for num, piece in enumerate(pieces):
-                    print(str(num) + ":", pieces[piece].whoami())
-            else:
-                raise IndexError("Player must be 1 or 2")
+            self.move_piece(player)
         elif move_choice == "2":
             raise NotImplementedError("Can't place pieces yet.")
         else:
             raise IndexError("Choice must be 1 or 2")
+
+        self.game.toggle_player()
+
         return True
