@@ -34,20 +34,11 @@ class Piece(metaclass=ABCMeta):
     def toggle_side(self):
         self.side = self.side % 2 + 1
 
-    def get_name(self):
-        return self.name
-    
-    def get_player(self):
-        return self.player
-
-    def get_id(self) -> int:
-        return self.get_id
-
     def whoami(self):
         return type(self).__name__
 
     def __str__(self):
-        return self.get_name()+str(self.get_player())
+        return self.name+str(self.player)
 
 class Assassin(Piece):
     def __init__(self, player):
