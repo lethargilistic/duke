@@ -56,4 +56,11 @@ class Controller():
             raise IndexError("Choice must be 1 or 2")
 
         self.game.toggle_player()
-        return True
+
+        # Return winner, or 0 for neither
+        if not self.game.has_duke(1):
+            return 2
+        elif not self.game.has_duke(2):
+            return 1
+        else:
+            return 0

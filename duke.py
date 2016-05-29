@@ -140,6 +140,12 @@ class Game():
                 return row.index(id(piece)), y
         return None
 
+    def has_duke(self, player:int):
+        for piece_id in self.player_pieces[player]:
+            if isinstance(self.player_pieces[player][piece_id], Duke):
+                return True
+        return False
+
     def move_piece(self, piece, move):
         x, y = self.find_piece(piece)
         self.board[y][x] = Game.BLANK_TILE
