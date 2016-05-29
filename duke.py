@@ -2,8 +2,9 @@ from pieces import *
 
 class Game():
     BOARD_SIZE = 6
+    BLANK_TILE = "  "
     def __init__(self):
-        self.board = [["  " for x in range(Game.BOARD_SIZE)] for y in range(Game.BOARD_SIZE)]
+        self.board = [[Game.BLANK_TILE for x in range(Game.BOARD_SIZE)] for y in range(Game.BOARD_SIZE)]
         self.current_player = 1
         
         self.player_pieces = [None, dict(), dict()] #No Player 0
@@ -141,7 +142,7 @@ class Game():
 
     def move_piece(self, piece, move):
         x, y = self.find_piece(piece)
-        self.board[y][x] = "  "
+        self.board[y][x] = Game.BLANK_TILE
         new_x = x + move.x
         new_y = y + move.y
         if isinstance(self.board[new_y][new_x], int):
@@ -159,7 +160,7 @@ class Game():
                 del self.player_pieces[2][piece_id]
             else:
                 raise KeyError("Unexpected piece id found in board")
-        self.board[y][x] = "  "
+        self.board[y][x] = Game.BLANK_TILE
 
     def toggle_player(self):
         self.current_player = self.current_player % 2 + 1

@@ -1,8 +1,4 @@
-import unittest
-from pieces import *
-from duke import Game
-
-class ModelTest(unittest.TestCase):
+test.TestCase):
     def setUp(self):
         self.game = Game()
 
@@ -13,7 +9,7 @@ class ModelTest(unittest.TestCase):
                 if isinstance(cell, int):
                     if not cell in either_player:
                         return False
-                elif not cell == "  ":
+                elif not cell == Game.BLANK_TILE:
                     return False
         return True
 

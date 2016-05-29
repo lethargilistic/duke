@@ -15,7 +15,7 @@ class View():
                         print(str(self.game.player_pieces[2][cell]) + "|", end="")
                     else:
                         raise ValueError("An id was on the board but not belonging to a player")
-                elif cell == "  ":
+                elif cell == Game.BLANK_TILE:
                     print(cell + "|", end="")
                 else:
                     raise ValueError("An unexpected element on the board encountered")
