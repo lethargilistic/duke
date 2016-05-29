@@ -1,9 +1,11 @@
 from duke import Game
+from view import View
 from movement import *
 
 class Controller():
-    def __init__(self, game):
+    def __init__(self, game, view):
         self.game = game
+        self.view = view
         self.set_up_player(1)
         self.set_up_player(2)
 
@@ -22,6 +24,42 @@ class Controller():
         footman2_position = int(input("Right to left (1, 2, or 3) where do you want Footman 2? "))
         footman_positions = {footman1_position, footman2_position}
         self.game.create_player(player_number, duke_on_right, footman_positions)
+
+    def game_loop(self):
+        winner = 0
+        self.view.show_board()
+        while winner == 0:
+            winner = self.take_turn()
+            self.view.show_board()
+        
+        print("Player", winner, "wins!")
+        play_again = input("Play again? (y/n)")
+        if play_again == y:
+            return True
+        else:
+            return False
+
+
+    def take_turn(self) -> int:
+        print("Player", self.game.current_player)
+        player = self.game.current_player
+        move_choice = input("1) Move a piece or 2) place a new one")
+        if move_choice == "1":
+            self.move_piece(player)
+        elif move_choice == "2":
+            raise NotImplementedError("Can't place pieces yet.")
+        else:
+            raise IndexError("Choice must be 1 or 2")
+
+        self.game.toggle_player()
+
+        # Return winner, or 0 for neither
+        if not self.game.has_duke(1):
+            return 2
+        elif not self.game.has_duke(2):
+            return 1
+        else:
+            return 0
 
     def move_piece(self, player):
         if player not in [1,2]:
@@ -43,24 +81,3 @@ class Controller():
         choice = valid_moves[int(input("Choose an option"))]
         self.game.move_piece(piece_obj, choice)
         piece_obj.toggle_side()
-
-    def take_turn(self) -> bool:
-        print("Player", self.game.current_player)
-        player = self.game.current_player
-        move_choice = input("1) Move a piece or 2) place a new one")
-        if move_choice == "1":
-            self.move_piece(player)
-        elif move_choice == "2":
-            raise NotImplementedError("Can't place pieces yet.")
-        else:
-            raise IndexError("Choice must be 1 or 2")
-
-        self.game.toggle_player()
-
-        # Return winner, or 0 for neither
-        if not self.game.has_duke(1):
-            return 2
-        elif not self.game.has_duke(2):
-            return 1
-        else:
-            return 0

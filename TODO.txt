@@ -9,4 +9,4 @@ TODO
 * Implement Command movement
 * TESTING
 * [CHECK] Getters & setters -> pythonic properties
-* Move game loop into controller from main
+* [CHECK] Move game loop into controller from main
