@@ -57,7 +57,35 @@ class ModelTest(unittest.TestCase):
         self.assertEqual(1, self.game.current_player)
         self.assertTrue(self.is_board_valid())
 
-    def test_filter_moves_slide__emptyBoard(self):
+    def test_filter_moves_normal__outOfBounds(self):
+        footman = Footman(1)
+        self.game.place_piece(footman, 1, 0)
+
+        result_moves = set(self.game.filter_moves(id(footman), footman.move2()))
+        correct_moves = {Move(1,1), Move(-1,1), Move(0,2)}
+        self.assertEqual(result_moves, correct_moves)
+
+    def test_filter_moves_normal__friendlyCollision(self):
+        footman = Footman(1)
+        self.game.place_piece(footman, 1, 0)
+        pikeman = Pikeman(1)
+        self.game.place_piece(pikeman, 1, 2)
+
+        result_moves = set(self.game.filter_moves(id(footman), footman.move2()))
+        correct_moves = {Move(1,1), Move(-1,1)}
+        self.assertEqual(result_moves, correct_moves)
+
+    def test_filter_moves_normal__enemyCollision(self):
+        footman = Footman(1)
+        self.game.place_piece(footman, 1, 0)
+        pikeman = Pikeman(2)
+        self.game.place_piece(pikeman, 1, 2)
+
+        result_moves = set(self.game.filter_moves(id(footman), footman.move2()))
+        correct_moves = {Move(1,1), Move(-1,1), Move(0,2)}
+        self.assertEqual(result_moves, correct_moves)
+
+    def test_filter_moves_slide__outOfBounds(self):
         duke = Duke(1)
         self.game.place_piece(duke, 0, 0)
 
