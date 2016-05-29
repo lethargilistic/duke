@@ -1,4 +1,8 @@
-test.TestCase):
+import unittest
+from pieces import *
+from duke import Game
+
+class ModelTest(unittest.TestCase):
     def setUp(self):
         self.game = Game()
 
@@ -86,7 +90,9 @@ test.TestCase):
         self.game.place_piece(duke, 0, 0)
 
         result_moves = set(self.game.filter_moves(id(duke), duke.move1()))
-        correct_moves = {Move(1,0), Move(2,0), Move(3,0), Move(4,0), Move(5,0)}
+        correct_moves = {Move(1,0,MoveRule.SLIDE), Move(2,0,MoveRule.SLIDE),
+                         Move(3,0,MoveRule.SLIDE), Move(4,0,MoveRule.SLIDE),
+                         Move(5,0,MoveRule.SLIDE)}
         self.assertEqual(result_moves, correct_moves)
 
     def test_filter_moves_slide__friendlyCollision(self):
@@ -96,7 +102,7 @@ test.TestCase):
         self.game.place_piece(footman, 2, 0)
 
         result_moves = set(self.game.filter_moves(id(duke), duke.move1()))
-        correct_moves = {Move(1,0)}
+        correct_moves = {Move(1,0,MoveRule.SLIDE)}
         self.assertEqual(result_moves, correct_moves)
 
     def test_filter_moves_slide__enemyCollision(self):
@@ -106,7 +112,7 @@ test.TestCase):
         self.game.place_piece(footman, 2, 0)
 
         result_moves = set(self.game.filter_moves(id(duke), duke.move1()))
-        correct_moves = {Move(1,0), Move(2,0)}
+        correct_moves = {Move(1,0,MoveRule.SLIDE), Move(2,0,MoveRule.SLIDE)}
         self.assertEqual(result_moves, correct_moves)
 
     def test_filter_moves_strike__outOfBounds(self):
