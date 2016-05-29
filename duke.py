@@ -6,10 +6,11 @@ class Game():
         self.board = [["  " for x in range(Game.BOARD_SIZE)] for y in range(Game.BOARD_SIZE)]
         self.current_player = 1
         
-        self.player_pieces = [None, {}, {}] #No Player 0
-        self.player_pieces_bags = [None, [], []]
+        self.player_pieces = [None, dict(), dict()] #No Player 0
+        self.player_bag = [None, dict(), dict()]
 
-    def create_player(self, player_number, duke_on_right: int, footman_positions: "set of int"):
+    def create_player(self, player_number:int, 
+                      duke_on_right:bool, footman_positions:"set of Move"):
         # Place the duke
         if duke_on_right:
             x = 2
@@ -93,7 +94,7 @@ class Game():
                     if move.rule == MoveRule.NORMAL:
                         valid_moveset += self.__standard_filter(move, new_x, new_y)
                     elif move.rule == MoveRule.STRIKE:
-                        valid_moveset += self.__standard_filter(move, new_x, new_y)
+                        raise NotImplementedError("Not all move filtering is implemented")
                     elif move.rule == MoveRule.JUMP:
                         raise NotImplementedError("Not all move filtering is implemented")
                     elif move.rule == MoveRule.SLIDE:
@@ -113,10 +114,19 @@ class Game():
 
     def place_piece(self, piece, x, y):
         '''Put a piece on the board at position (x,y). Will clobber pieces.'''
-        self.board[y][x] = piece
+        self.board[y][x] = id(piece)
+        self.player_pieces[piece.player][id(piece)] = piece
 
     def remove_piece(self, x, y):
         '''Remove a piece on the board at position (x,y).'''
+        if isinstance(self.board[y][x], int): #int is piece id
+            piece_id = self.board[y][x]
+            if piece_id in self.player_pieces[1]:
+                del self.player_pieces[1][piece_id]
+            elif piece_id in self.player_pieces[2]:
+                del self.player_pieces[2][piece_id]
+            else:
+                raise KeyError("Unexpected piece id found in board")
         self.board[y][x] = "  "
 
     def toggle_player(self):

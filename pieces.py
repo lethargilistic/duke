@@ -2,10 +2,19 @@ from abc import ABCMeta, abstractmethod
 from movement import *
 
 class Piece(metaclass=ABCMeta):
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) \
+            and self.name == other.name \
+            and self.side == other.side \
+            and self.player == other.player
+
     def __init__(self, name, player):
         self.name = name
         self.side = 1
         self.player = player
+
+    def __ne__(self, other):
+        return not __eq__(other)
 
     def move(self):
         if self.side == 1:

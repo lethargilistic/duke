@@ -8,13 +8,12 @@ class ModelTest(unittest.TestCase):
 
     def is_board_valid(self):
         either_player = dict(list(self.game.player_pieces[1].items()) + list(self.game.player_pieces[2].items()))
-        for y, row in enumerate(self.game.board):
-            for x, col in enumerate(row):
-                space = self.game.board[y][x]
-                if isinstance(space, int):
-                    if not space in either_player:
+        for row in self.game.board:
+            for cell in row:
+                if isinstance(cell, int):
+                    if not cell in either_player:
                         return False
-                elif not space == "  ":
+                elif not cell == "  ":
                     return False
         return True
 
@@ -56,5 +55,32 @@ class ModelTest(unittest.TestCase):
 
     def test_constructor(self):
         self.assertEqual(1, self.game.current_player)
-        self.assertTrue(self.is_board_valid)
+        self.assertTrue(self.is_board_valid())
 
+    def test_filter_moves_slide__emptyBoard(self):
+        duke = Duke(1)
+        self.game.place_piece(duke, 0, 0)
+
+        result_moves = set(self.game.filter_moves(id(duke), duke.move1()))
+        correct_moves = {Move(1,0), Move(2,0), Move(3,0), Move(4,0), Move(5,0)}
+        self.assertEqual(result_moves, correct_moves)
+
+    def test_filter_moves_slide__friendlyCollision(self):
+        duke = Duke(1)
+        self.game.place_piece(duke, 0, 0)
+        footman = Footman(1)
+        self.game.place_piece(footman, 2, 0)
+
+        result_moves = set(self.game.filter_moves(id(duke), duke.move1()))
+        correct_moves = {Move(1,0)}
+        self.assertEqual(result_moves, correct_moves)
+
+    def test_filter_moves_slide__enemyCollision(self):
+        duke = Duke(1)
+        self.game.place_piece(duke, 0, 0)
+        footman = Footman(2)
+        self.game.place_piece(footman, 2, 0)
+
+        result_moves = set(self.game.filter_moves(id(duke), duke.move1()))
+        correct_moves = {Move(1,0), Move(2,0)}
+        self.assertEqual(result_moves, correct_moves)

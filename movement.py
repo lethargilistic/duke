@@ -13,11 +13,21 @@ class MoveRule():
         return ["NORMAL", "STRIKE", "JUMP", "SLIDE", "JUMPSLIDE", "COMMAND", "DREAD", "DEFENSE"][enum]
 
 class Move():
-    def __init__(self, x, y, rule=MoveRule.NORMAL):
-        #TODO: Guarantee types. num, num, MoveType
+    def __eq__(self, other):
+        return self.x == other.x \
+            and self.y == other.y \
+            and self.rule == other.rule
+
+    def __hash__(self):
+        return hash((self.x, self.y, self.rule))
+
+    def __init__(self, x:int, y:int, rule=MoveRule.NORMAL):
         self.x = x
         self.y = y
         self.rule = rule 
+
+    def __ne__(self, other):
+        return not __eq__(other)
     
     def for_player2(self):
         self.x *= -1

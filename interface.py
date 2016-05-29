@@ -17,7 +17,7 @@ class Controller():
             duke_on_right = False
         else:
             raise IndexError("Choose right or left")
-        #TODO
+
         footman1_position = int(input("Right to left (1, 2, or 3) where do you want Footman 1? "))
         footman2_position = int(input("Right to left (1, 2, or 3) where do you want Footman 2? "))
         footman_positions = {footman1_position, footman2_position}
