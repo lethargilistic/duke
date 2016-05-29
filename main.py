@@ -7,14 +7,12 @@ import time
 
 def game_loop(view, controller):
     #Each player has a list of pieces. If no Duke in their pieces, they lose
-    view.update()
     view.show_board()
     still_playing = True
     while(still_playing):
         still_playing = controller.take_turn()
 
         #Display Board
-        view.update()
         view.show_board()
     #Game is over. Show results
 

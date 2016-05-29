@@ -71,15 +71,19 @@ class Game():
         '''Converts a Move with MoveRule.SLIDE to the equivalent valid list of
         Moves for the individual board squares'''
         slide_moves = []
+        displacement_x = move.x
+        displacement_y = move.y
         while self.__in_board_bounds(new_x, new_y):
             if isinstance(self.board[new_y][new_x], int):
                 if not self.board[new_y][new_x] in self.player_pieces[self.current_player]:
-                    slide_moves.append(Move(new_x, new_y))
+                    slide_moves.append(Move(displacement_x, displacement_y, MoveRule.SLIDE))
                 break
             else:
-                slide_moves.append(Move(new_x, new_y))
+                slide_moves.append(Move(displacement_x, displacement_y, MoveRule.SLIDE))
             new_x += move.x
             new_y += move.y
+            displacement_x += move.x
+            displacement_y += move.y
         return slide_moves
 
     def __strike_filter(self, move, new_x, new_y) -> "list of Move":
@@ -129,7 +133,23 @@ class Game():
         self.board[y][x] = id(piece)
         self.player_pieces[piece.player][id(piece)] = piece
 
-    def remove_piece(self, x, y):
+    def find_piece(self, piece):
+        for y, row in enumerate(self.board):
+            if id(piece) in row:
+                return row.index(id(piece)), y
+        return None
+
+    def move_piece(self, piece, move):
+        x, y = self.find_piece(piece)
+        self.board[y][x] = "  "
+        new_x = x + move.x
+        new_y = y + move.y
+        if isinstance(self.board[new_y][new_x], int):
+            other_piece_id = self.board[new_y][new_x]
+            del self.player_pieces[piece.player%2+1][other_piece_id]
+        self.board[new_y][new_x] = id(piece)
+        
+    def destroy_piece(self, x, y):
         '''Remove a piece on the board at position (x,y).'''
         if isinstance(self.board[y][x], int): #int is piece id
             piece_id = self.board[y][x]

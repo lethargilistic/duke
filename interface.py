@@ -34,12 +34,14 @@ class Controller():
         piece_choice = int(input("Which piece?"))
         piece_id = piece_list[piece_choice]
         piece_obj = pieces[piece_id]
-        print(", ".join(map(str,piece_obj.move())))
         valid_moves = self.game.filter_moves(piece_id, piece_obj.move())
         if valid_moves:
-            print(", ".join(map(str,valid_moves)))
+            for count, move in enumerate(valid_moves):
+                print(count, move)
         else:
             print([])
+        choice = valid_moves[int(input("Choose an option"))]
+        self.game.move_piece(piece_obj, choice)
         piece_obj.toggle_side()
 
     def take_turn(self) -> bool:
@@ -54,5 +56,4 @@ class Controller():
             raise IndexError("Choice must be 1 or 2")
 
         self.game.toggle_player()
-
         return True
