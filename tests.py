@@ -112,3 +112,31 @@ class ModelTest(unittest.TestCase):
         result_moves = set(self.game.filter_moves(id(duke), duke.move1()))
         correct_moves = {Move(1,0), Move(2,0)}
         self.assertEqual(result_moves, correct_moves)
+
+    def test_filter_moves_strike__outOfBounds(self):
+        pikeman = Pikeman(1)
+        self.game.place_piece(pikeman, 0, 0)
+
+        result_moves = set(self.game.filter_moves(id(pikeman), pikeman.move2()))
+        correct_moves = {Move(0,1)}
+        self.assertEqual(result_moves, correct_moves)
+
+    def test_filter_moves_strike__friendlyCollision(self):
+        pikeman = Pikeman(1)
+        self.game.place_piece(pikeman, 0, 0)
+        footman = Footman(1)
+        self.game.place_piece(footman, 1, 2)
+
+        result_moves = set(self.game.filter_moves(id(pikeman), pikeman.move2()))
+        correct_moves = {Move(0,1)}
+        self.assertEqual(result_moves, correct_moves)
+
+    def test_filter_moves_strike__enemyCollision(self):
+        pikeman = Pikeman(1)
+        self.game.place_piece(pikeman, 0, 0)
+        footman = Footman(2)
+        self.game.place_piece(footman, 1, 2)
+
+        result_moves = set(self.game.filter_moves(id(pikeman), pikeman.move2()))
+        correct_moves = {Move(0,1), Move(1,2,MoveRule.STRIKE)}
+        self.assertEqual(result_moves, correct_moves)

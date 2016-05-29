@@ -53,7 +53,7 @@ class Game():
     def __in_board_bounds(self, x, y):
         return 0 <= x < Game.BOARD_SIZE and 0 <= y < Game.BOARD_SIZE
 
-    def __standard_filter(self, move, new_x, new_y) -> "list of Move":
+    def __normal_filter(self, move, new_x, new_y) -> "list of Move":
         '''Returns a list of Move if the Move is valid (does not go off board,
         does not capture friendly Piece), or an empty list. Move retains its
         MoveRule.'''
@@ -69,7 +69,7 @@ class Game():
 
     def __slide_filter(self, move, new_x, new_y) -> "list of Move":
         '''Converts a Move with MoveRule.SLIDE to the equivalent valid list of
-        Move with MoveRule.NORMAL'''
+        Moves for the individual board squares'''
         slide_moves = []
         while self.__in_board_bounds(new_x, new_y):
             if isinstance(self.board[new_y][new_x], int):
@@ -82,6 +82,18 @@ class Game():
             new_y += move.y
         return slide_moves
 
+    def __strike_filter(self, move, new_x, new_y) -> "list of Move":
+        '''Returns a list of Move if the move is valid'''
+        #Eliminate based on going off the board
+        if not self.__in_board_bounds(new_x, new_y):
+            return []
+
+        #Eliminate based on landing on friendly unit
+        if self.board[new_y][new_x] not in self.player_pieces[self.current_player%2+1]:
+            return []
+    
+        return [move]
+
     def filter_moves(self, piece_id, all_moves) -> "list of Move":
         #TODO: Return all valid, possible moves by this piece
         valid_moveset = []
@@ -92,9 +104,9 @@ class Game():
                     new_x = x + move.x
                     new_y = y + move.y
                     if move.rule == MoveRule.NORMAL:
-                        valid_moveset += self.__standard_filter(move, new_x, new_y)
+                        valid_moveset += self.__normal_filter(move, new_x, new_y)
                     elif move.rule == MoveRule.STRIKE:
-                        raise NotImplementedError("Not all move filtering is implemented")
+                        valid_moveset += self.__strike_filter(move, new_x, new_y)
                     elif move.rule == MoveRule.JUMP:
                         raise NotImplementedError("Not all move filtering is implemented")
                     elif move.rule == MoveRule.SLIDE:
