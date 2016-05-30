@@ -47,7 +47,7 @@ class Controller():
         if move_choice == "1":
             self.move_piece(player)
         elif move_choice == "2":
-            raise NotImplementedError("Can't place pieces yet.")
+            self.place_piece_from_bag(player)
         else:
             raise IndexError("Choice must be 1 or 2")
 
@@ -81,3 +81,19 @@ class Controller():
         choice = valid_moves[int(input("Choose an option"))]
         self.game.move_piece(piece_obj, choice)
         piece_obj.toggle_side()
+
+    def place_piece_from_bag(self, player):
+        piece = self.game.get_piece_from_bag(player)
+        self.game.player_pieces[player][id(piece)] = piece
+
+        options_for_placement = self.game.duke_open_sides(player)
+        for count, move in enumerate(options_for_placement):
+            print(count, move)
+
+        choice = int(input("Choose your position"))
+        x, y = options_for_placement[choice]
+        
+        self.game.place_piece(piece, x, y)
+
+
+

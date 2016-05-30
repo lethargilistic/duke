@@ -1,4 +1,5 @@
 from pieces import *
+import random
 
 class Game():
     BOARD_SIZE = 6
@@ -48,8 +49,16 @@ class Game():
             self.board[footman_y][footman_x] = id(footman)
             self.player_pieces[player_number][id(footman)] = footman
 
-        #TODO: Fill player's bag with the other pieces
-        #self.player_pieces_bags[player_number] = [
+        # Fill player's bag with the other pieces
+        self.player_bag[player_number] = [Footman(player_number),
+                            Pikeman(player_number), Pikeman(player_number),
+                            Pikeman(player_number), Knight(player_number), 
+                            Wizard(player_number), Ranger(player_number),
+                            Seer(player_number), General(player_number), 
+                            Priest(player_number), Champion(player_number),
+                            Marshall(player_number), Bowman(player_number),
+                            Dragoon(player_number), Assassin(player_number),
+                            Longbowman(player_number)]
 
     def __in_board_bounds(self, x, y):
         return 0 <= x < Game.BOARD_SIZE and 0 <= y < Game.BOARD_SIZE
@@ -145,6 +154,26 @@ class Game():
             if isinstance(self.player_pieces[player][piece_id], Duke):
                 return True
         return False
+
+    def get_piece_from_bag(self, player):
+        bag_len = len(self.player_bag[player])
+        return self.player_bag[player].pop(random.randrange(0, bag_len))
+
+    def duke_open_sides(self, player):
+        open_cells = []
+
+        duke = None
+        for ids in self.player_pieces[player]:
+            if isinstance(self.player_pieces[player][ids], Duke):
+               duke = self.player_pieces[player][ids]
+               break
+        if duke:
+            x, y = self.find_piece(duke)
+            for i in [(0,1), (1,0), (0, -1), (-1, 0)]:
+                if self.__in_board_bounds(x+i[0], y+i[1]) and not isinstance(self.board[y+i[1]][x+i[0]], int):
+                    open_cells.append((x+i[0], y+i[1]))
+        
+        return open_cells
 
     def move_piece(self, piece, move):
         x, y = self.find_piece(piece)
