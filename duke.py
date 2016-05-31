@@ -63,10 +63,9 @@ class Game():
     def __in_board_bounds(self, x, y):
         return 0 <= x < Game.BOARD_SIZE and 0 <= y < Game.BOARD_SIZE
 
-    def __normal_filter(self, move, new_x, new_y) -> "list of Move":
+    def __jump_filter(self, move, new_x, new_y) -> "list of Move":
         '''Returns a list of Move if the Move is valid (does not go off board,
-        does not capture friendly Piece), or an empty list. Move retains its
-        MoveRule.'''
+        does not capture friendly Piece), or an empty list.'''
         #Eliminate based on going off the board
         if not self.__in_board_bounds(new_x, new_y):
             return []
@@ -75,6 +74,34 @@ class Game():
         if self.board[new_y][new_x] in self.player_pieces[self.current_player]:
             return []
     
+        return [move]
+
+    def __normal_filter(self, move, new_x, new_y) -> "list of Move":
+        if not self.__in_board_bounds(new_x, new_y):
+            return []
+        
+        if self.board[new_y][new_x] in self.player_pieces[self.current_player]:
+            return []
+
+        displacement_x = move.x
+        displacement_y = move.y
+
+        while displacement_x != new_x and displacement_y != new_y:
+            if isinstance(self.board[displacement_y][displacement_x], int):
+                return []
+
+            if displacement_x != move.x:
+                if move.x > 0:
+                    displacement_x += 1
+                elif move.x < 0:
+                    displacement_x -= 1
+            if displacement_y != move.y:
+                if move.y > 0:
+                    displacement_y += 1
+                elif move.y < 0:
+                    displacement_y -= 1
+            print(displacement_x, displacement_y, new_x, new_y)
+
         return [move]
 
     def __slide_filter(self, move, new_x, new_y) -> "list of Move":
