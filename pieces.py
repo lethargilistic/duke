@@ -108,7 +108,6 @@ class Dragoon(Piece):
                 Move(1,2,MoveRule.JUMP), Move(-1,2,MoveRule.JUMP),
                 Move(1,-1,MoveRule.SLIDE), Move(-1,-1,MoveRule.SLIDE))
 
-
 class Duke(Piece):
     def __init__(self, player):
         Piece.__init__(self, "D", player)

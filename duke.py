@@ -1,4 +1,5 @@
 from pieces import *
+import math
 import random
 
 class Game():
@@ -11,7 +12,7 @@ class Game():
         self.player_pieces = [None, dict(), dict()] #No Player 0
         self.player_bag = [None, dict(), dict()]
 
-    def create_player(self, player_number:int, 
+    def create_player(self, player_number:int,
                       duke_on_right:bool, footman_positions:"set of Move"):
         # Place the duke
         if duke_on_right:
@@ -79,28 +80,31 @@ class Game():
     def __normal_filter(self, move, new_x, new_y) -> "list of Move":
         if not self.__in_board_bounds(new_x, new_y):
             return []
-        
+
         if self.board[new_y][new_x] in self.player_pieces[self.current_player]:
             return []
 
+        #Start at the target cell
         displacement_x = move.x
         displacement_y = move.y
 
-        while displacement_x != new_x and displacement_y != new_y:
-            if isinstance(self.board[displacement_y][displacement_x], int):
-                return []
+        #Determine direction of move
+        sign_of_x = 0
+        sign_of_y = 0
+        if move.x != 0:
+            sign_of_x = int(math.copysign(1, move.x))
+        if move.y != 0:
+            sign_of_y = int(math.copysign(1, move.y))
 
-            if displacement_x != move.x:
-                if move.x > 0:
-                    displacement_x += 1
-                elif move.x < 0:
-                    displacement_x -= 1
-            if displacement_y != move.y:
-                if move.y > 0:
-                    displacement_y += 1
-                elif move.y < 0:
-                    displacement_y -= 1
-            print(displacement_x, displacement_y, new_x, new_y)
+        #Move back from target cell toward start cell, checking validity
+        displacement_x -= sign_of_x
+        displacement_y -= sign_of_y
+        #Normal movement will always be on the x, y, or xy axes
+        while displacement_x != 0 or displacement_y != 0:
+            if isinstance(self.board[new_y-displacement_y][new_x-displacement_x], int):
+                return []
+            displacement_x -= sign_of_x
+            displacement_y -= sign_of_y
 
         return [move]
 
@@ -149,7 +153,7 @@ class Game():
                     elif move.rule == MoveRule.STRIKE:
                         valid_moveset += self.__strike_filter(move, new_x, new_y)
                     elif move.rule == MoveRule.JUMP:
-                        raise NotImplementedError("Not all move filtering is implemented")
+                        valid_moveset += self.__jump_filter(move, new_x, new_y)
                     elif move.rule == MoveRule.SLIDE:
                         valid_moveset += self.__slide_filter(move, new_x, new_y)
                     elif move.rule == MoveRule.JUMPSLIDE:
@@ -226,4 +230,3 @@ class Game():
 
     def toggle_player(self):
         self.current_player = self.current_player % 2 + 1
-

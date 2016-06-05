@@ -65,7 +65,7 @@ class ModelTest(unittest.TestCase):
         correct_moves = {Move(1,1), Move(-1,1), Move(0,2)}
         self.assertEqual(result_moves, correct_moves)
 
-    def test_filter_moves_normal__friendlyCollision(self):
+    def test_filter_moves_normal__friendlyTarget(self):
         footman = Footman(1)
         self.game.place_piece(footman, 1, 0)
         pikeman = Pikeman(1)
@@ -75,14 +75,38 @@ class ModelTest(unittest.TestCase):
         correct_moves = {Move(1,1), Move(-1,1)}
         self.assertEqual(result_moves, correct_moves)
 
-    def test_filter_moves_normal__enemyCollision(self):
-        footman = Footman(1)
-        self.game.place_piece(footman, 1, 0)
+    def test_filter_moves_normal__friendlyBlocker(self):
+        attacker = Pikeman(1)
+        self.game.place_piece(attacker, 0, 3)
+        blocker = Footman(1)
+        self.game.place_piece(blocker, 0, 2)
+        target = Footman(2)
+        self.game.place_piece(target, 0, 1)
+
+        result_moves = set(self.game.filter_moves(id(attacker), attacker.move2()))
+        correct_moves = {Move(0,1)}
+        self.assertEqual(result_moves, correct_moves)
+
+    def test_filter_moves_normal__enemyTarget(self):
+        attacker = Footman(1)
+        self.game.place_piece(attacker, 1, 0)
         pikeman = Pikeman(2)
         self.game.place_piece(pikeman, 1, 2)
 
-        result_moves = set(self.game.filter_moves(id(footman), footman.move2()))
+        result_moves = set(self.game.filter_moves(id(attacker), attacker.move2()))
         correct_moves = {Move(1,1), Move(-1,1), Move(0,2)}
+        self.assertEqual(result_moves, correct_moves)
+
+    def test_filter_moves_normal__enemyBlocker(self):
+        attacker = Pikeman(1)
+        self.game.place_piece(attacker, 0, 3)
+        blocker = Footman(2)
+        self.game.place_piece(blocker, 0, 2)
+        target = Footman(2)
+        self.game.place_piece(target, 0, 1)
+
+        result_moves = set(self.game.filter_moves(id(attacker), attacker.move2()))
+        correct_moves = {Move(0,1), Move(0,-1)}
         self.assertEqual(result_moves, correct_moves)
 
     def test_filter_moves_slide__outOfBounds(self):
@@ -95,7 +119,7 @@ class ModelTest(unittest.TestCase):
                          Move(5,0,MoveRule.SLIDE)}
         self.assertEqual(result_moves, correct_moves)
 
-    def test_filter_moves_slide__friendlyCollision(self):
+    def test_filter_moves_slide__friendlyTarget(self):
         duke = Duke(1)
         self.game.place_piece(duke, 0, 0)
         footman = Footman(1)
@@ -105,7 +129,7 @@ class ModelTest(unittest.TestCase):
         correct_moves = {Move(1,0,MoveRule.SLIDE)}
         self.assertEqual(result_moves, correct_moves)
 
-    def test_filter_moves_slide__enemyCollision(self):
+    def test_filter_moves_slide__enemyTarget(self):
         duke = Duke(1)
         self.game.place_piece(duke, 0, 0)
         footman = Footman(2)
@@ -123,7 +147,7 @@ class ModelTest(unittest.TestCase):
         correct_moves = {Move(0,1)}
         self.assertEqual(result_moves, correct_moves)
 
-    def test_filter_moves_strike__friendlyCollision(self):
+    def test_filter_moves_strike__friendlyTarget(self):
         pikeman = Pikeman(1)
         self.game.place_piece(pikeman, 0, 0)
         footman = Footman(1)
@@ -133,7 +157,7 @@ class ModelTest(unittest.TestCase):
         correct_moves = {Move(0,1)}
         self.assertEqual(result_moves, correct_moves)
 
-    def test_filter_moves_strike__enemyCollision(self):
+    def test_filter_moves_strike__enemyTarget(self):
         pikeman = Pikeman(1)
         self.game.place_piece(pikeman, 0, 0)
         footman = Footman(2)
