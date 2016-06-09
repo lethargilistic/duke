@@ -163,6 +163,12 @@ class Game():
     
         return [move]
 
+    def __command_filter(self, move, new_x, new_y) -> "list of Move":
+        if self.__in_board_bounds(new_x, new_y) and self.board[new_y][new_x] in self.player_pieces[self.current_player]:
+            return [move]
+        else:
+            return []
+
     def filter_moves(self, piece_id, all_moves) -> "list of Move":
         #TODO: Return all valid, possible moves by this piece
         valid_moveset = []
@@ -183,7 +189,7 @@ class Game():
                     elif move.rule == MoveRule.JUMPSLIDE:
                         valid_moveset += self.__jumpslide_filter(move, new_x, new_y)
                     elif move.rule == MoveRule.COMMAND:
-                        raise NotImplementedError("Not all move filtering is implemented")
+                        valid_moveset += self.__command_filter(move, new_x, new_y)
                     elif move.rule == MoveRule.DREAD:
                         raise NotImplementedError("Not all move filtering is implemented")
                     elif move.rule == MoveRule.DEFENSE:

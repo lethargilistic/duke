@@ -28,6 +28,13 @@ class ModelTest(unittest.TestCase):
         log.debug("Correct set:")
         for move in correct_set:
             log.debug(str(move))
+        symmetric_difference = result_set ^ correct_set
+        if symmetric_difference:
+            log.debug("Symmetric difference:")
+            for move in symmetric_difference:
+                output = str(move)
+                output +=  " correct" if move in correct_set else " result"
+                log.debug(output)
 
     def test_valid_create_player_1__rightDuke12(self):
         self.game.create_player(1, True, {1,2})
@@ -214,9 +221,62 @@ class ModelTest(unittest.TestCase):
         correct_moves = {Move(0,1), Move(1,2,MoveRule.STRIKE)}
         self.assertEqual(result_moves, correct_moves)
 
+    def test_filter_moves_command__outOfBounds(self):
+        marshall = Marshall(1)
+        self.game.place_piece(marshall, 3, Game.BOARD_SIZE-1)
+
+        result_moves = set(self.game.filter_moves(id(marshall), marshall.move2()))
+        correct_moves = {Move(-2,0), Move(-1,0), Move(1,0), 
+                         Move(2,0), Move(-1,-1), Move(1,-1)}
+        self.assertEqual(result_moves, correct_moves)
+
+    def test_filter_moves_command__noTarget(self):
+        marshall = Marshall(1)
+        self.game.place_piece(marshall, 3, Game.BOARD_SIZE-2)
+
+        result_moves = set(self.game.filter_moves(id(marshall), marshall.move2()))
+        correct_moves = {Move(-2,0), Move(-1,0), Move(1,0), 
+                         Move(2,0), Move(-1,-1), Move(1,-1),
+                         Move(-1,1), Move(0,1), Move(1,1)}
+        
+        self.log_movesets(result_moves, correct_moves)
+        self.assertEqual(result_moves, correct_moves)
+        
+    def test_filter_moves_command__enemyTarget(self):
+        marshall = Marshall(1)
+        self.game.place_piece(marshall, 3, Game.BOARD_SIZE-2)
+        footman = Footman(2)
+        self.game.place_piece(footman, 3, Game.BOARD_SIZE-1)
+
+        result_moves = set(self.game.filter_moves(id(marshall), marshall.move2()))
+        correct_moves = {Move(-2,0), Move(-1,0), Move(1,0), 
+                         Move(2,0), Move(-1,-1), Move(1,-1),
+                         Move(-1,1), Move(0,1), Move(1,1)}
+        
+        self.log_movesets(result_moves, correct_moves)
+        self.assertEqual(result_moves, correct_moves)
+        
+    def test_filter_moves_command__friendlyTarget(self):
+        marshall = Marshall(1)
+        self.game.place_piece(marshall, 3, Game.BOARD_SIZE-2)
+        footman = Footman(1)
+        self.game.place_piece(footman, 3, Game.BOARD_SIZE-1)
+
+        result_moves = set(self.game.filter_moves(id(marshall), marshall.move2()))
+        correct_moves = {Move(-2,0), Move(-1,0), Move(1,0), 
+                         Move(2,0), Move(-1,-1), Move(1,-1),
+                         Move(-1,1), Move(0,1,MoveRule.COMMAND), Move(1,1)}
+        
+        self.log_movesets(result_moves, correct_moves)
+        self.assertEqual(result_moves, correct_moves)
+
+    def test_command_movement(self):
+        self.fail("Not implemented")
+        
 if __name__ == "__main__":
     logging.basicConfig(stream=open("log_test.txt", "w"))
     logging.getLogger("test_filter_moves_jumpslide__outOfBounds").setLevel(logging.DEBUG)
     logging.getLogger("test_filter_moves_jumpslide__friendlyTarget").setLevel(logging.DEBUG)
     logging.getLogger("test_filter_moves_jumpslide__enemyTarget").setLevel(logging.DEBUG)
+    logging.getLogger("test_filter_moves_command__noTargets").setLevel(logging.DEBUG)
     unittest.main()

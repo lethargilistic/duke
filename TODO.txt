@@ -1,14 +1,16 @@
 TODO
 ----
-* Player can choose to place a token from their bag instead of moving
+* [CHECK] Player can choose to place a token from their bag instead of moving
 * [CHECK] Player can place the starting footman in custom way
 * [CHECK] Implement Strike movement --- Only lands on enemy pieces. Not same as normal
-* Implement Normal movement (different from Jump)
-* Implement JumpSlide movement
+* [CHECK] Implement Normal movement (different from Jump)
+* [CHECK] Implement JumpSlide movement
 * Implement Defense movement
 * Implement Dread movement
-* Implement Command movement
+* [CHECK] Implement Command movement filtering
+* Implement the actual Command movement (placing chosen ally on another command space)
 * TESTING
 * [CHECK] Getters & setters -> pythonic properties
 * [CHECK] Move game loop into controller from main
 * test movement that will be blocked on the x, y, and xy axes.
+* Real GUI layer (maybe pygame)
