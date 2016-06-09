@@ -124,6 +124,7 @@ class Duchess(Piece):
 
     def move1(self):
         return (Move(1,0), Move(-1,0), Move(0,-2),
+                Move(-1,0,MoveRule.COMMAND), Move(1,0,MoveRule.COMMAND),
                 Move(-2,0,MoveRule.COMMAND), Move(2,0,MoveRule.COMMAND))
 
     def move2(self):
@@ -153,6 +154,7 @@ class General(Piece):
     def move2(self):
         return (Move(0,1), Move(1,0), Move(2,0), Move(-1,0), Move(-2,0),
                 Move(-1,2,MoveRule.JUMP), Move(1,2,MoveRule.JUMP),
+                Move(-1,0,MoveRule.COMMAND), Move(1,0,MoveRule.COMMAND),
                 Move(1,-1,MoveRule.COMMAND), Move(0,-1,MoveRule.COMMAND),
                 Move(-1,-1,MoveRule.COMMAND))
 
@@ -188,7 +190,9 @@ class Marshall(Piece):
     def move2(self):
         return (Move(1,0), Move(1,-1), Move(-1,-1), 
                 Move(-1,0), Move(-1,1), Move(0,1),
-                Move(1,1), Move(2,0), Move(-2,0))
+                Move(1,1), Move(2,0), Move(-2,0),
+                Move(-1,1,MoveRule.COMMAND), Move(0,1,MoveRule.COMMAND),
+                Move(1,1,MoveRule.COMMAND)) 
 
 class Oracle(Piece):
     def __init__(self, player):
