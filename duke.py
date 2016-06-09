@@ -116,7 +116,7 @@ class Game():
         displacement_y = move.y
         while self.__in_board_bounds(new_x, new_y):
             if isinstance(self.board[new_y][new_x], int):
-                if not self.board[new_y][new_x] in self.player_pieces[self.current_player]:
+                if self.board[new_y][new_x] not in self.player_pieces[self.current_player]:
                     slide_moves.append(Move(displacement_x, displacement_y, MoveRule.SLIDE))
                 break
             else:
@@ -125,6 +125,30 @@ class Game():
             new_y += move.y
             displacement_x += move.x
             displacement_y += move.y
+
+        return slide_moves
+ 
+    def __jumpslide_filter(self, move, new_x, new_y) -> "list of Move":
+        '''Converts a Move with MoveRule.SLIDE to the equivalent valid list of
+        Moves for the individual board squares'''
+        slide_moves = []
+        displacement_x = move.x
+        displacement_y = move.y
+        sign_of_x = 0
+        sign_of_y = 0
+        if move.x != 0:
+            sign_of_x = int(math.copysign(1, move.x))
+        if move.y != 0:
+            sign_of_y = int(math.copysign(1, move.y))
+
+        while self.__in_board_bounds(new_x, new_y):
+            if not isinstance(self.board[new_y][new_x], int) or self.board[new_y][new_x] not in self.player_pieces[self.current_player]:
+                    slide_moves.append(Move(displacement_x, displacement_y, MoveRule.JUMPSLIDE))
+            new_x += sign_of_x
+            new_y +=  sign_of_y
+            displacement_x += sign_of_x
+            displacement_y += sign_of_y
+
         return slide_moves
 
     def __strike_filter(self, move, new_x, new_y) -> "list of Move":
@@ -157,7 +181,7 @@ class Game():
                     elif move.rule == MoveRule.SLIDE:
                         valid_moveset += self.__slide_filter(move, new_x, new_y)
                     elif move.rule == MoveRule.JUMPSLIDE:
-                        raise NotImplementedError("Not all move filtering is implemented")
+                        valid_moveset += self.__jumpslide_filter(move, new_x, new_y)
                     elif move.rule == MoveRule.COMMAND:
                         raise NotImplementedError("Not all move filtering is implemented")
                     elif move.rule == MoveRule.DREAD:
