@@ -228,8 +228,8 @@ class Priest(Piece):
         Piece.__init__(self, "T", player)
 
     def move1(self):
-        return (Move(-1,1,MoveRule.SLIDE), Move(1,1,MoveRule.SLIDE)
-               Move(1,-1,MoveRule.SLIDE), Move(-1,-1,MoveRule.SLIDE)
+        return (Move(-1,1,MoveRule.SLIDE), Move(1,1,MoveRule.SLIDE),
+                Move(1,-1,MoveRule.SLIDE), Move(-1,-1,MoveRule.SLIDE))
 
     def move2(self):
         return (Move(-1,1), Move(1,1), 

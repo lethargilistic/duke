@@ -51,6 +51,8 @@ class Game():
             self.player_pieces[player_number][id(footman)] = footman
 
         # Fill player's bag with the other pieces
+        self.player_bag[player_number] = [General(player_number)]
+        '''
         self.player_bag[player_number] = [Footman(player_number),
                             Pikeman(player_number), Pikeman(player_number),
                             Pikeman(player_number), Knight(player_number), 
@@ -60,6 +62,7 @@ class Game():
                             Marshall(player_number), Bowman(player_number),
                             Dragoon(player_number), Assassin(player_number),
                             Longbowman(player_number)]
+        '''
 
     def __in_board_bounds(self, x, y):
         return 0 <= x < Game.BOARD_SIZE and 0 <= y < Game.BOARD_SIZE

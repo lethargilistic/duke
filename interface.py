@@ -42,7 +42,7 @@ class Controller():
     def take_turn(self) -> int:
         print("Player", self.game.current_player)
         player = self.game.current_player
-        move_choice = input("1) Move a piece or 2) place a new one")
+        move_choice = input("1) Move a piece or 2) place a new one ")
         if move_choice == "1":
             self.move_piece(player)
         elif move_choice == "2":
@@ -68,7 +68,7 @@ class Controller():
         for num, piece in enumerate(pieces):
             print(str(num) + ":", pieces[piece].whoami())
             piece_list.append(piece)
-        piece_choice = int(input("Which piece?"))
+        piece_choice = int(input("Which piece? "))
         piece_id = piece_list[piece_choice]
         piece_obj = pieces[piece_id]
         valid_moves = self.game.filter_moves(piece_id, piece_obj.move())
@@ -77,8 +77,18 @@ class Controller():
                 print(count, move)
         else:
             print([])
-        choice = valid_moves[int(input("Choose an option"))]
-        self.game.move_piece(piece_obj, choice)
+        choice = valid_moves[int(input("Choose an option "))]
+        if choice.rule == MoveRule.COMMAND:
+            command_choices = piece_obj.moves_with_rule(MoveRule.COMMAND)
+            command_choices.remove(choice)
+            print("You chose a command move")
+            for num, move in enumerate(command_choices):
+                print(num, move)
+
+            destination_choice = command_choices[int(input("Choose an option "))]
+            self.game.command_movement(piece_obj, choice, destination_choice)
+        else:
+            self.game.move_piece(piece_obj, choice)
         piece_obj.toggle_side()
 
     def place_piece_from_bag(self, player):
