@@ -1,5 +1,5 @@
 import logging
-import sys
+import movement
 import unittest
 import inspect
 from pieces import *
@@ -271,7 +271,35 @@ class ModelTest(unittest.TestCase):
         self.assertEqual(result_moves, correct_moves)
 
     def test_command_movement(self):
-        self.fail("Not implemented")
+        log = logging.getLogger(inspect.stack()[0].function)
+
+        marshall = Marshall(1)
+        self.game.place_piece(marshall, 3, Game.BOARD_SIZE-2)
+        footman = Footman(1)
+        self.game.place_piece(footman, 3, Game.BOARD_SIZE-1)
+
+        log.debug("\n" + str(self.game))
+
+        valid_moves = self.game.filter_moves(id(marshall), marshall.move2())
+        log.debug("All moves:")
+        for count, move in enumerate(valid_moves):
+            log.debug(str(count) + " " + str(move))
+
+        #Magic number, but valid_moves will have
+        #a constant list of values that can be seen in the debug log
+        source_move = valid_moves[8]
+
+        log.debug("Command moves:")
+        destination_moves = marshall.moves_with_rule(MoveRule.COMMAND)
+        destination_moves.remove(source_move)
+        for count, move in enumerate(destination_moves):
+            log.debug(str(count) + " " + str(move))
+
+        destination = destination_moves[0] #Any moves in destination_moves are valid
+        self.game.command_movement(marshall, source_move, destination)
+
+        log.debug("\n" + str(self.game))
+        self.assertEqual(id(footman), self.game.board[Game.BOARD_SIZE-2+destination.y][3+destination.x])
         
 if __name__ == "__main__":
     logging.basicConfig(stream=open("log_test.txt", "w"))
@@ -279,4 +307,5 @@ if __name__ == "__main__":
     logging.getLogger("test_filter_moves_jumpslide__friendlyTarget").setLevel(logging.DEBUG)
     logging.getLogger("test_filter_moves_jumpslide__enemyTarget").setLevel(logging.DEBUG)
     logging.getLogger("test_filter_moves_command__noTargets").setLevel(logging.DEBUG)
+    logging.getLogger("test_command_movement").setLevel(logging.DEBUG)
     unittest.main()

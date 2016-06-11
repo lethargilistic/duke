@@ -39,7 +39,6 @@ class Controller():
         else:
             return False
 
-
     def take_turn(self) -> int:
         print("Player", self.game.current_player)
         player = self.game.current_player

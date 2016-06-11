@@ -199,6 +199,17 @@ class Game():
 
         return valid_moveset
 
+    def command_movement(self, piece_with_command, source_command, destination_command):
+        '''Move the piece at source_command.(x,y) to destination_command.(x,y)'''
+        x, y = self.find_piece(piece_with_command)
+        player = piece_with_command.player
+        piece_moved = self.player_pieces[player][self.board[y+source_command.y][x+source_command.x]]
+        self.board[y+source_command.y][x+source_command.x] = Game.BLANK_TILE
+        
+
+        self.place_piece(piece_moved,
+                         x+destination_command.x, y+destination_command.y)
+
     def place_piece(self, piece, x, y):
         '''Put a piece on the board at position (x,y). Will clobber pieces.'''
         self.board[y][x] = id(piece)
@@ -243,6 +254,7 @@ class Game():
         new_y = y + move.y
         if isinstance(self.board[new_y][new_x], int):
             other_piece_id = self.board[new_y][new_x]
+            #TODO: raise exeption if in this player's pieces list, not enemy's
             del self.player_pieces[piece.player%2+1][other_piece_id]
         self.board[new_y][new_x] = id(piece)
         
@@ -260,3 +272,22 @@ class Game():
 
     def toggle_player(self):
         self.current_player = self.current_player % 2 + 1
+
+    def __str__(self):
+        output = ""
+        for count, row in enumerate(self.board[::-1]):
+            output += str(Game.BOARD_SIZE-count-1)+"|"
+            for cell in row:
+                if isinstance(cell, int):
+                    if cell in self.player_pieces[1]:
+                        output += str(self.player_pieces[1][cell]) + "|"
+                    elif cell in self.player_pieces[2]:
+                        output += str(self.player_pieces[2][cell]) + "|"
+                    else:
+                        raise ValueError("An id was on the board but not belonging to a player")
+                elif cell == Game.BLANK_TILE:
+                    output += cell + "|"
+                else:
+                    raise ValueError("An unexpected element on the board encountered")
+            output += "\n"
+        return output

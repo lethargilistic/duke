@@ -16,6 +16,14 @@ class Piece(metaclass=ABCMeta):
     def __ne__(self, other):
         return not __eq__(other)
 
+    def __str__(self):
+        return self.name+str(self.player)
+
+    def moves_with_rule(self, moverule):
+        '''Returns the moves on the current side that have moverule.'''
+        moves = self.move2()
+        return [x for x in self.move2() if x.rule == moverule]
+
     def move(self):
         if self.side == 1:
             return self.move1()
@@ -45,9 +53,6 @@ class Piece(metaclass=ABCMeta):
 
     def whoami(self):
         return type(self).__name__
-
-    def __str__(self):
-        return self.name+str(self.player)
 
 class Assassin(Piece):
     def __init__(self, player):
