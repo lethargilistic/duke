@@ -46,6 +46,9 @@ class Controller():
         if move_choice == "1":
             self.move_piece(player)
         elif move_choice == "2":
+            if not self.game.player_pieces[player]: #no more pieces
+                print("Your bag is empty. Choose a piece to move.")
+                self.move_piece(player)
             self.place_piece_from_bag(player)
         else:
             raise IndexError("Choice must be 1 or 2")

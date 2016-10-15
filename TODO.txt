@@ -14,7 +14,10 @@ TODO
 * [CHECK] Move game loop into controller from main
 * test movement that will be blocked on the x, y, and xy axes.
 * Real GUI layer (maybe pygame)
+* filter command so that if all the spaces are full, command is not an option.
 
 KNOWN BUGS
 ----------
 * Player 2's movement with MoveRule Command may not be mirrored. (same as player 1)
+* Player 2's movement not mirrored in general. Suspect that the mirroring is
+  happening twice, so it seems to not be happening. Too tired right now.

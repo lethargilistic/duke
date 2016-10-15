@@ -22,7 +22,13 @@ class Piece(metaclass=ABCMeta):
     def moves_with_rule(self, moverule):
         '''Returns the moves on the current side that have moverule.'''
         moves = self.move2()
-        return [x for x in self.move2() if x.rule == moverule]
+        if self.player == 2:
+            self.mirror_for_player_2(moves)
+        return [x for x in moves if x.rule == moverule]
+
+    def mirror_for_player_2(moves):
+        for move in moves:
+            move.for_player2()
 
     def move(self):
         if self.side == 1:
@@ -33,8 +39,7 @@ class Piece(metaclass=ABCMeta):
             raise IndexError("Pieces have 2 sides")
 
         if self.player == 2:
-            for move in moveset:
-                move.for_player2()
+            self.mirror_for_player_2(moveset)
 
         return moveset
 
@@ -153,8 +158,11 @@ class General(Piece):
         Piece.__init__(self, "G", player)
 
     def move1(self):
+        return self.move2()
+        '''
         return (Move(0,1), Move(2,0), Move(0,-1), Move(-2,0),
                 Move(-1,2,MoveRule.JUMP), Move(1,2,MoveRule.JUMP))
+        '''
 
     def move2(self):
         return (Move(0,1), Move(1,0), Move(2,0), Move(-1,0), Move(-2,0),
